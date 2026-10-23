@@ -108,5 +108,20 @@ $('kioskSavePin').addEventListener('click',async()=>{const pin=$('kioskPin').val
 $('kioskUploadPhoto').addEventListener('click',async()=>{const file=$('kioskPhoto').files[0],status=$('kioskTeacherStatus');if(!file||!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>5*1024*1024){status.textContent='Choose a JPEG, PNG or WebP photograph up to 5 MB.';return}const btn=$('kioskUploadPhoto');btn.disabled=true;status.textContent='Uploading registered photograph...';try{const signed=await kioskAdminCall('photo_upload_url',{mime:file.type});const {error}=await client.storage.from('schoolflow-teacher-photos').uploadToSignedUrl(signed.path,signed.token,file,{contentType:file.type});if(error)throw error;await kioskAdminCall('photo_confirm',{path:signed.path});status.textContent='Registered teacher photograph saved.';await openKioskTeacher(kioskTeacherId)}catch(e){status.textContent='Photo upload failed: '+e.message}finally{btn.disabled=false}});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-kiosk-teacher]');if(b){e.preventDefault();openKioskTeacher(b.dataset.kioskTeacher)}});
 
+
+function teacherKioskUrl(){return new URL('teacher-clock.html?school_id='+encodeURIComponent(schoolId),location.href).href}
+$('teacherClockOpen').onclick=()=>window.open(teacherKioskUrl(),'_blank','noopener');
+$('teacherClockCopy').onclick=async()=>{try{await navigator.clipboard.writeText(teacherKioskUrl());$('teacherClockLinkStatus').textContent='Kiosk link copied'}catch(e){$('teacherClockLinkStatus').textContent='Open the kiosk and copy the URL'}};
+$('teacherClockLoad').onclick=loadTeacherClockReport;
+async function loadTeacherClockReport(){if(!schoolId)return;const status=$('teacherClockStatus'),target=$('teacherClockRows');status.textContent='Loading attendance...';target.replaceChildren();try{
+const {data:{session}}=await client.auth.getSession();if(!session)throw Error('Sign in required');
+const res=await fetch('https://ufddjrebwqfqaqppdgxj.supabase.co/functions/v1/schoolflow-teacher-attendance-report',{method:'POST',headers:{'Content-Type':'application/json','apikey':'sb_publishable_T5jKK_iqiCVr0lXBmciGQA_L83zO1ZG','Authorization':'Bearer '+session.access_token},body:JSON.stringify({action:'list',school_id:schoolId,date:$('teacherClockDate').value})});
+const out=await res.json();if(!res.ok)throw Error(out.error||'Unable to load report');
+status.textContent=out.rows.length+' events · Pakistan time'+(out.truncated?' · First 500 shown':'');
+if(!out.rows.length){target.textContent='No teacher attendance recorded for this date.';return}
+const table=document.createElement('table');table.style.width='100%';table.style.borderCollapse='collapse';const head=table.createTHead().insertRow();for(const name of ['Teacher','Action','Time (PKT)','GPS accuracy','Photo']){const th=document.createElement('th');th.textContent=name;th.style.padding='10px';th.style.textAlign='left';head.append(th)}
+for(const item of out.rows){const row=table.insertRow();const vals=[item.teacher_name,item.event_type==='sign_in'?'Sign In':'Sign Out',new Date(item.event_time).toLocaleTimeString('en-PK',{timeZone:'Asia/Karachi',hour:'2-digit',minute:'2-digit',second:'2-digit'}),item.location_accuracy_m==null?'—':Math.round(item.location_accuracy_m)+' m'];for(const val of vals){const cell=row.insertCell();cell.textContent=val;cell.style.padding='10px';cell.style.borderTop='1px solid #e2eaed'}const cell=row.insertCell();cell.style.padding='10px';if(item.photo_url){const a=document.createElement('a');a.href=item.photo_url;a.target='_blank';a.rel='noopener noreferrer';a.textContent='View photo';cell.append(a)}else cell.textContent='Unavailable'}target.style.overflowX='auto';target.append(table);
+}catch(e){status.textContent='Report failed: '+e.message}}
+
 $('tabs').addEventListener('click',e=>{if(e.target.dataset.tab){active=e.target.dataset.tab;render()}});(async()=>{await new Promise(resolve=>setTimeout(resolve,700));if(!await showInviteSetup())await init()})();
 </script></body></html>
