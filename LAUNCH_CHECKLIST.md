@@ -143,6 +143,14 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Evaluate school-wide lockout denial-of-service tradeoff and recovery path for large schools
 - [ ] Test concurrent PIN attempts and real device clock-in/out flows
 
+## Security audit continuation — round 14 (25 October 2026)
+- [x] Found a race window: teacher can be deactivated after PIN verification but before kiosk attendance submission
+- [x] Deployed schoolflow-teacher-kiosk-submit v3 to recheck active teacher and matching school immediately after verifying the token, before GPS/photo processing
+- [x] Re-fetched deployed v3 and verified teacher check exists before photo upload; live stored sessions unchanged (22 stored, none active)
+- [ ] **Database defence in depth:** schoolflow_kiosk_record_attendance() still lacks active school and teacher checks inside its atomic transaction; attempted migration was blocked and was NOT applied
+- [ ] Test the entire verification-to-submission flow with a test teacher deactivated between steps; confirm 403 and no image or clock event created
+- [ ] Consider transactional locking or stronger revocation semantics for concurrent account deactivation and attendance submission
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
