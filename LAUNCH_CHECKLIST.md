@@ -151,6 +151,16 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Test the entire verification-to-submission flow with a test teacher deactivated between steps; confirm 403 and no image or clock event created
 - [ ] Consider transactional locking or stronger revocation semantics for concurrent account deactivation and attendance submission
 
+## Security audit continuation — round 15 (25 October 2026)
+- [x] Applied database migration kiosk_attendance_revalidate_active_teacher to schoolflow_kiosk_record_attendance
+- [x] Atomic kiosk attendance function now rejects suspended schools and inactive teachers after locking the verification-session row and before recording clock events
+- [x] Verified function still locks the verification-session record and consumes the token on successful attendance
+- [x] Verified anon and authenticated roles have no direct EXECUTE access to privileged attendance-recording function
+- [x] Re-ran rolled-back actual SQL call tests: missing and expired token submissions rejected with expected expiry error
+- [ ] Test deactivation between valid PIN and sign-in on a dedicated test school (no live accounts altered)
+- [ ] Confirm real mobile camera, GPS, photo upload and successful one-time clock event end to end
+- [ ] Validate post-change clock-in/out with known test credentials; database and API check presence alone do not establish full end-to-end success
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
