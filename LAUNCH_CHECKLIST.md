@@ -35,6 +35,16 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Test every privileged endpoint with valid School A / School B credentials, suspended-school accounts, and invalid or expired sessions
 - [ ] Review storage signed URL generation, kiosk token reuse, and audit trails with real test accounts
 
+## Security audit continuation — round 3 (25 October 2026)
+- [x] Teacher password changes now require an active teacher profile, an active school, and matching teacher membership before changing password (deployed function v5)
+- [x] Student promotion endpoint now enforces active school status for history and promotion operations (deployed function v5)
+- [x] Read-only cross-school relationship checks found **zero existing mismatches across 10 relationships**, including students/classes, attendance, exam assignments/results, fee/student and wages/teacher
+- [ ] **Still blocked:** teacher-attendance-report active-school enforcement; deployment was blocked on previous attempt
+- [ ] **Still blocked:** three teacher-login administration endpoints (invite, create, manage) need explicit active-school checks; deployment tool blocked the attempt and no change was saved
+- [ ] Carry out authenticated cross-school security tests with two school admin accounts and assigned/unassigned teachers (the relationship integrity query is not a substitute)
+- [ ] Exercise the suspended-school behaviour using a non-production test school, without interrupting current active schools
+- [ ] Confirm no regression in password updates, school promotions, invites, teacher attendance and report cards
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
