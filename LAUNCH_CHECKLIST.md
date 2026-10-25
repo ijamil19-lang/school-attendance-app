@@ -124,6 +124,16 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Confirm kiosk-session cleanup actually executes on a future valid-format PIN verification; no live PIN submission was performed in this audit
 - [ ] Review scaling beyond 100 teacher PIN credentials per school and error handling under simultaneous requests
 
+## Security audit continuation — round 12 (25 October 2026)
+- [x] Verified all four kiosk-sensitive tables have RLS enabled and no anon/authenticated direct grants
+- [x] PIN verification now rejects ambiguous PINs matching multiple teachers, instead of choosing the last matching teacher (kiosk verify v8)
+- [x] PIN verification checks school credential count before the 100-item lookup; over 100 credentials returns an explicit support error rather than silently ignoring teachers beyond the cap
+- [x] Re-fetched deployed kiosk verify v8: duplicate-match guard, credential cap, rate limiting, active-school check, and expired-token cleanup all present
+- [x] Existing school has only 3 kiosk credentials, so the cap does not affect current PIN tests
+- [ ] Implement a scalable PIN lookup for schools exceeding 100 teachers; current deliberate fail-closed cap is a launch limitation
+- [ ] Add teacher PIN uniqueness enforcement or admin warning at PIN assignment; ambiguous shared PINs now safely fail verification
+- [ ] Run valid/invalid/duplicate PIN flows with a dedicated test school and test kiosk lockout/recovery
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
