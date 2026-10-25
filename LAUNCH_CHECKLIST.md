@@ -45,6 +45,18 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Exercise the suspended-school behaviour using a non-production test school, without interrupting current active schools
 - [ ] Confirm no regression in password updates, school promotions, invites, teacher attendance and report cards
 
+## Security audit continuation — round 4 (25 October 2026)
+- [x] Added and verified active-school guard on schoolflow-teacher-attendance-report (v3)
+- [x] Added and verified active-school guard on schoolflow-invite-teacher (v4)
+- [x] Added and verified active-school guard on schoolflow-create-teacher-login (v7)
+- [x] SQL role simulation: Green Valley administrator can see zero Manha students or classes through public RLS
+- [x] SQL role simulation: assigned teacher sees 3 assigned students, zero unassigned students and zero student private profiles
+- [x] SQL role simulation: direct access to sf_exam_results is denied to authenticated role
+- [ ] **Outstanding:** schoolflow-manage-teacher-login v1 has no active-school guard; deploy attempt blocked, source unchanged
+- [ ] Test auth flows and API access with actual sessions (SQL role simulation is not full end-to-end verification)
+- [ ] Test student data boundary after school suspension using a dedicated test school
+- [ ] Check reverse tenant isolation and other privileged endpoint routes
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
