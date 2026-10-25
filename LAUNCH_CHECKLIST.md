@@ -161,6 +161,15 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Confirm real mobile camera, GPS, photo upload and successful one-time clock event end to end
 - [ ] Validate post-change clock-in/out with known test credentials; database and API check presence alone do not establish full end-to-end success
 
+## Security audit continuation — round 16 (25 October 2026)
+- [x] Tested real schoolflow_kiosk_record_attendance SQL routine inside a transaction, using a newly inserted temporary session and a currently configured kiosk teacher
+- [x] Deactivated-teacher scenario rejected with "Teacher account is inactive"
+- [x] Suspended-school scenario rejected with "School access suspended"
+- [x] Active teacher and active school with invalid GPS rejected before photo/clock-event creation
+- [x] Entire SQL test transaction rolled back; subsequent checks found 0 active kiosk sessions, 3 active kiosk teachers, 0 suspended schools and 0 recent attendance clock events
+- [ ] Live end-to-end mobile camera/PIN/location workflow with dedicated test credentials is still needed
+- [ ] Recheck two-school API isolation using actual signed-in accounts and malicious cross-school identifiers
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
