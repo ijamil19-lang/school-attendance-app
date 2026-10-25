@@ -114,6 +114,16 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Confirm opportunistic session cleanup removes eligible old rows during the next valid-format PIN verification
 - [ ] Decide if unused schools require time-based cleanup and introduce scheduled maintenance only if necessary
 
+## Security audit continuation — round 11 (25 October 2026)
+- [x] Confirmed RLS enabled on teacher_kiosk_credentials, teacher_kiosk_sessions, teacher_kiosk_attempts and teacher_clock_events
+- [x] Confirmed anon/authenticated roles have no direct table grants on any of those four sensitive tables
+- [x] Simulated authenticated teacher role and confirmed SELECT is not granted for all four tables
+- [x] Added Cache-Control: no-store to kiosk admin API responses containing signed photo links and verified deployed schoolflow-teacher-kiosk-admin v6; existing photo-path guard intact
+- [x] Inspected kiosk session state: 22 stored sessions, all expired, none active; cleanup is opportunistic on PIN verification, not an independently scheduled job
+- [ ] Exercise kiosk PIN, upload, sign-in/sign-out and token replay with real test credentials on a dedicated test school
+- [ ] Confirm kiosk-session cleanup actually executes on a future valid-format PIN verification; no live PIN submission was performed in this audit
+- [ ] Review scaling beyond 100 teacher PIN credentials per school and error handling under simultaneous requests
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
