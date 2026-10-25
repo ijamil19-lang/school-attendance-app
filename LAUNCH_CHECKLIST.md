@@ -57,6 +57,15 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Test student data boundary after school suspension using a dedicated test school
 - [ ] Check reverse tenant isolation and other privileged endpoint routes
 
+## Security audit continuation — round 5 (25 October 2026)
+- [x] Deployed schoolflow-manage-teacher-login v2: administrator login-email changes and password-reset requests now require an active school after membership validation
+- [x] Re-fetched deployed function and confirmed active-school guard, admin membership check and token validation are present
+- [x] Reviewed SQL function grants: promotion, geofence, kiosk attempt/record, and attendance snapshot functions are not directly executable by anon or authenticated roles
+- [ ] Follow up on public EXECUTE privilege on schoolflow_block_holiday_attendance (a SECURITY DEFINER function); determine whether it is a trigger and revoke unnecessary execute rights
+- [ ] Verify that a suspended school blocks all supported endpoints using a non-production account
+- [ ] Run login-based and API cross-school tests; SQL policy simulations are partial evidence only
+- [ ] Verify teacher email-change/password-reset user journeys and invitation email delivery
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
