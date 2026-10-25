@@ -134,6 +134,15 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Add teacher PIN uniqueness enforcement or admin warning at PIN assignment; ambiguous shared PINs now safely fail verification
 - [ ] Run valid/invalid/duplicate PIN flows with a dedicated test school and test kiosk lockout/recovery
 
+## Security audit continuation — round 13 (25 October 2026)
+- [x] Exercised schoolflow_kiosk_pin_attempt database routine in rolled-back transactions: five consecutive failures trigger 15-minute lockout
+- [x] Confirmed matching teacher ID is rejected while the school lock is active
+- [x] Confirmed expired lock permits correct teacher verification and resets attempt counter to zero
+- [x] Rechecked production failed-attempt counter after rollback: zero and no active lock; no real PINs or attendance were changed
+- [ ] Verify full Edge Function PIN verification and login UI with test-school credentials
+- [ ] Evaluate school-wide lockout denial-of-service tradeoff and recovery path for large schools
+- [ ] Test concurrent PIN attempts and real device clock-in/out flows
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
