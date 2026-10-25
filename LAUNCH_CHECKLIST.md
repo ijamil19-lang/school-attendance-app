@@ -66,6 +66,15 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Run login-based and API cross-school tests; SQL policy simulations are partial evidence only
 - [ ] Verify teacher email-change/password-reset user journeys and invitation email delivery
 
+## Security audit continuation — round 6 (25 October 2026)
+- [x] Verified schoolflow_block_holiday_attendance() is an enabled SECURITY DEFINER trigger on attendance_records
+- [x] Revoked unnecessary direct EXECUTE permissions from PUBLIC, anon and authenticated on the holiday-attendance trigger function; confirmed trigger remains enabled and service role retains access
+- [x] Revoked anon EXECUTE permission on seven more privileged functions: admin_update_teacher_profile, claim_teacher_invitation, platform_list_payments, platform_list_subscriptions, platform_record_payment, platform_update_subscription, and school_subscription_notice
+- [x] Verified all seven now deny anonymous execution while preserving authenticated role execution; internal school-admin/platform-owner checks remain necessary
+- [ ] Verify signed-in user flows: teacher invitation claiming, teacher profile editing, payments/subscriptions, and school subscription notice
+- [ ] Test holiday attendance rejection on an appropriate non-production school/student and ensure the trigger still functions as expected
+- [ ] Continue reviewing storage permissions, signed URLs, and real authenticated cross-school API checks
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
