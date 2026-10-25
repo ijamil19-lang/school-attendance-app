@@ -75,6 +75,17 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Test holiday attendance rejection on an appropriate non-production school/student and ensure the trigger still functions as expected
 - [ ] Continue reviewing storage permissions, signed URLs, and real authenticated cross-school API checks
 
+## Security audit continuation — round 7 (25 October 2026)
+- [x] Teacher photo bucket schoolflow-teacher-photos is private; school-logos is intentionally public
+- [x] Private-photo storage objects have no direct SELECT policy for ordinary authenticated users
+- [x] Simulated Green Valley admin and teacher sessions each see zero teacher photo objects via storage.objects RLS
+- [x] Existing storage objects: 7 private teacher photos and 6 public logos, all with school-ID prefixes
+- [x] Existing teacher credential and clock-event photo references show zero wrong school/teacher path prefixes
+- [x] Reviewed signed photo links: kiosk admin and PIN verification links expire after 120 seconds; attendance-report photo links expire after 300 seconds
+- [ ] Test authenticated photo access over real Storage API and verify signed URL expiry in actual browsers
+- [ ] Test photo-upload confirmation, permissions, and kiosk images using two separate school accounts
+- [ ] Decide production photo-retention period, who may request deletion, and whether old uploaded photos should be automatically cleaned up
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
