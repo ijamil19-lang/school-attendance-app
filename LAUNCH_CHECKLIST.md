@@ -25,6 +25,16 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Confirm user sessions actually fail access after school suspension, including existing kiosk session tokens
 - [ ] Verify unauthorised requests return 401/403 in a staging environment, without exposing pupil data
 
+## Security audit continuation — 25 October 2026
+- [x] Added active-school checks to WhatsApp absence-preview endpoint, geofence-admin endpoint, and teacher-kiosk-admin endpoint; verified deployed versions
+- [x] Reviewed teacher login invitation/create/reset functions: they verify administrator membership in the teacher's school before changing login details
+- [x] Reviewed promotion confirmation: administrator membership checked before history and confirmed changes
+- [ ] **High priority:** schoolflow-teacher-attendance-report still lacks an explicit active-school guard; deployment attempt was blocked, so source remains unchanged
+- [ ] **High priority:** add active-school guards to promotion confirmation, teacher login creation/invitation/reset and any other privileged functions not yet covered
+- [ ] **High priority:** teacher change-password currently checks an active teacher profile but not an active school or current teacher membership; strengthen this endpoint
+- [ ] Test every privileged endpoint with valid School A / School B credentials, suspended-school accounts, and invalid or expired sessions
+- [ ] Review storage signed URL generation, kiosk token reuse, and audit trails with real test accounts
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
