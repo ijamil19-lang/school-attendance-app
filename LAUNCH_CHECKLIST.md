@@ -14,6 +14,17 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Verify Stripe or alternative billing/payment process if paid subscriptions are enabled
 - [ ] Configure and verify production hostname, TLS and Supabase auth redirect allowlist
 
+## Security audit progress — 25 October 2026
+- [x] Reviewed core RLS policies: school membership, administrator and attendance-class checks reference school ID, with active-school checks in helper functions
+- [x] Verified teacher-exam backend validates authenticated teacher, school membership, active profile, allocated class and subject, and per-student class membership
+- [x] Added active-school enforcement in admin finance/results, teacher exams, absence-email, calendar, kiosk PIN and kiosk attendance submission functions
+- [x] Removed unnecessary anon/authenticated direct grants on report grading and remarks tables; privileged administration remains server-authorised
+- [x] Verified teacher-photo storage bucket is private; school-logo bucket is public by design
+- [ ] Audit remaining privileged backend functions for suspension enforcement, rate limiting, and object-level authorisation
+- [ ] Execute genuine school-A/school-B impersonation tests with separate real user sessions (not simulated by code inspection)
+- [ ] Confirm user sessions actually fail access after school suspension, including existing kiosk session tokens
+- [ ] Verify unauthorised requests return 401/403 in a staging environment, without exposing pupil data
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
