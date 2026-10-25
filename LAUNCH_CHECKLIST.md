@@ -170,6 +170,16 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Live end-to-end mobile camera/PIN/location workflow with dedicated test credentials is still needed
 - [ ] Recheck two-school API isolation using actual signed-in accounts and malicious cross-school identifiers
 
+## Teacher kiosk PIN simplification (25 October 2026)
+- [x] Added school-scoped unique index teacher_kiosk_school_pin_unique on keyed PIN fingerprints (HMAC-SHA256); cleartext PINs are not stored
+- [x] schoolflow-teacher-kiosk-admin v7 now generates random zero-padded four-digit PINs, retries database uniqueness conflicts and shows the PIN only on the generation response; manual PIN setting is disabled
+- [x] schoolflow-teacher-kiosk-verify v9 accepts generated four-digit PINs by fingerprint and preserves older 6–8 digit PBKDF2 PINs for existing teachers
+- [x] Administrator UI now has a Generate / Reset 4-digit PIN button and one-time visible PIN handover; mobile kiosk accepts four-digit PINs and older PINs
+- [x] Verified deployed Edge Functions, GitHub pages and database unique index
+- [ ] Existing 3 teacher PINs are deliberately left unchanged; each teacher needs PIN generation in the admin panel and private delivery before switching
+- [ ] Complete live authenticated test generating one four-digit PIN, checking unique assignment and kiosk entry with dedicated test teacher
+- [ ] Consider extra lockout and device/IP rate limits because four-digit PINs are less resistant to guessing than six-digit PINs
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
