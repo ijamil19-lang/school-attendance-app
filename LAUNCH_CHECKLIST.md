@@ -86,6 +86,16 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Test photo-upload confirmation, permissions, and kiosk images using two separate school accounts
 - [ ] Decide production photo-retention period, who may request deletion, and whether old uploaded photos should be automatically cleaned up
 
+## Security audit continuation — round 8 (25 October 2026)
+- [x] Re-reviewed kiosk registered photo upload and confirmation: admin token, school administrator membership and active school are checked; photo confirmation is scoped to the same school and teacher path
+- [x] Attendance-report signed photo URLs now require photo paths under the selected school and event teacher (schoolflow-teacher-attendance-report v4)
+- [x] Kiosk admin registered-photo preview signed links now require matching school and teacher folder (schoolflow-teacher-kiosk-admin v4)
+- [x] Kiosk PIN verified teacher-photo signed links now require matching school and matched teacher folder (schoolflow-teacher-kiosk-verify v4)
+- [x] Re-fetched all three deployed functions and confirmed path checks; read-only data checks show zero mismatched attendance or registered photo paths
+- [ ] Perform actual signed-upload / photo-confirm tests on a dedicated test account and verify content type and size limits via live Storage API
+- [ ] Check real signed-link expiration after 120/300 seconds and cross-school photo request blocking through authenticated API
+- [ ] Review retention/deletion of old teacher photos and consider scalable photo confirmation for folders containing over 100 files
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
