@@ -96,6 +96,15 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Check real signed-link expiration after 120/300 seconds and cross-school photo request blocking through authenticated API
 - [ ] Review retention/deletion of old teacher photos and consider scalable photo confirmation for folders containing over 100 files
 
+## Security audit continuation — round 9 (25 October 2026)
+- [x] Updated teacher kiosk photo confirmation to search by specific filename, not the first 100 objects in the folder (kiosk admin v5)
+- [x] Photo confirmation now checks exact filename, existence, metadata MIME type matching extension, and a 1 KB–2 MB size range
+- [x] Re-fetched deployed kiosk admin v5 and confirmed server-side photo checks
+- [x] Kiosk session inspection: 22 stored sessions were expired; none currently active; expiry checks already block expired tokens
+- [ ] Plan automatic cleanup of expired kiosk sessions; do not delete until retention/audit requirements are decided
+- [ ] Test actual signed image upload and confirmation on mobile, including invalid file/oversized file and wrong-school path
+- [ ] Assess image-byte content validation independently of declared MIME/extension
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
