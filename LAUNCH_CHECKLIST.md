@@ -105,6 +105,15 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Test actual signed image upload and confirmation on mobile, including invalid file/oversized file and wrong-school path
 - [ ] Assess image-byte content validation independently of declared MIME/extension
 
+## Security audit continuation — round 10 (25 October 2026)
+- [x] Deployed kiosk PIN verification v6: validates PIN shape first, then opportunistically deletes only this school's tokens expired over 24 hours ago
+- [x] Confirmed pg_cron is not installed; cleanup runs during normal PIN verification rather than via a new scheduler
+- [x] Confirmed stored kiosk sessions: 22 expired, 0 active, 21 older than 24 hours at inspection; no tokens deleted by the review
+- [x] Confirmed attendance-recording SQL routine locks the session row, checks expiry, and deletes the token on successful attendance (single-use transaction design)
+- [ ] Exercise token rejection after successful submission and when expired using a test-school kiosk without changing live attendance
+- [ ] Confirm opportunistic session cleanup removes eligible old rows during the next valid-format PIN verification
+- [ ] Decide if unused schools require time-based cleanup and introduce scheduled maintenance only if necessary
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
