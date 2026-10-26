@@ -1,3 +1,10 @@
+## Teacher exam submission confirmation — 26 October 2026
+- [x] After successful exam/test submission, clear and hide the student marks grid, reset assessment name and total marks, and show an accessible success pop-up
+- [x] If validation or the backend returns an error, show an error pop-up and preserve all previously entered marks for correction/retry
+- [x] Keep the existing final confirmation before sending marks, disable submit during save, and retain the inline status message
+- [x] Verified attendance.html inline JavaScript parses after the change
+- [ ] Test one real teacher submission and a validation failure in an authenticated browser to verify visual pop-up and preserved mark inputs
+
 ## Exam marks submission atomicity check — 26 October 2026
 - [x] Inspected teacher exam endpoint and confirmed active school, linked teacher membership, active teacher, assigned class and subject checks
 - [x] Existing exam marks integrity passed: 4 result rows, zero absent-student marks violations and zero invalid present-student marks
