@@ -180,6 +180,15 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Complete live authenticated test generating one four-digit PIN, checking unique assignment and kiosk entry with dedicated test teacher
 - [ ] Consider extra lockout and device/IP rate limits because four-digit PINs are less resistant to guessing than six-digit PINs
 
+## Kiosk attendance integrity and reporting checks (26 October 2026)
+- [x] Read-only check of actual teacher clock events: four records, three sign-ins and one sign-out, all for Manha Schools System
+- [x] All four attendance events reference existing private Storage photos, correct school/teacher folder paths, GPS accuracy, consent, existing school and existing teacher
+- [x] No duplicate same-day sign-ins and no sign-out without a prior same-day sign-in (Pakistan date)
+- [x] Report Edge Function queries events scoped to authorised school and signs matching school/teacher photo paths for five minutes
+- [x] Fixed kiosk GPS error text hardcoding one school's 150-metre accuracy threshold (GitHub teacher-clock.html)
+- [ ] Full live mobile sign-in/out and authorised admin reporting should be tested with a dedicated test teacher; this audit did not create attendance events or perform authenticated browser test
+- [ ] Verify GPS-denied and GPS-inaccurate error messages on an actual phone; ensure the administrator configured the right boundary for each school
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
