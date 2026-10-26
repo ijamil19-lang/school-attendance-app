@@ -1,3 +1,15 @@
+## Teacher passwordless invitation remediation — 26 October 2026
+- [x] Replaced schoolflow-create-teacher-login v7 with v8: generates Supabase type=invite one-time action link and emails it via existing Resend configuration, without setting a temporary password
+- [x] Teacher creation response no longer contains temporary passwords or secret invitation links; new teacher can set their own password on attendance.html invitation landing
+- [x] Existing teacher account is left untouched; profile must be active, teacher email valid, active school, and caller a matching school administrator
+- [x] An invitation is not sent until the new teacher's profile is linked and school_members teacher role has been assigned
+- [x] If mail request fails, workflow attempts to unwind newly created teacher membership, profile link and invitation account; no existing teacher credentials modified
+- [x] Admin button changed to Send secure invite; removed teacher password prompt and display, JS passes static syntax validation
+- [x] Supabase v8 ACTIVE and GitHub admin source re-fetched
+- [ ] Verify RESEND_API_KEY and SCHOOLFLOW_EMAIL_FROM email deliverability using a dedicated test teacher; secrets were not retrieved or exposed
+- [ ] Confirm Supabase Authentication Redirect URLs include https://ijamil19-lang.github.io/school-attendance-app/attendance.html and teacher sets password after clicking invitation
+- [ ] Run real authenticated invitation flow and cross-school denial tests using test admins; no actual invitations/emails were sent during remediation
+
 ## Teacher login and invitation security check — 26 October 2026
 - [x] Inspected deployed schoolflow-create-teacher-login v7, schoolflow-manage-teacher-login v2 and schoolflow-invite-teacher v4: all verify signed-in caller, school-specific administrator role and active school
 - [x] Database consistency: 0 teachers missing email, 4 teachers with linked logins, 0 missing teacher memberships, 0 wrong-role teacher logins, 0 teachers at suspended schools
