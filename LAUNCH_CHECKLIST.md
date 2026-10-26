@@ -1,3 +1,12 @@
+## Whole class exam/test result sheet — 26 October 2026
+- [x] New Whole Class Results panel in admin Exams & Tests with class and assessment selectors
+- [x] Matrix shows each student, roll number, subject marks, total and percentage; explicitly distinguishes absent students and missing results; includes past class students present in that assessment
+- [x] School-scoped schoolflow-admin-modules v16 action class_result_sheet; verifies active school/admin, class and assessment ownership, returns current students and historical students linked to marks
+- [x] CSV download and print/save-as-PDF from new report view
+- [x] Re-fetched active backend and GitHub admin HTML, scripts parse successfully
+- [ ] Signed-in browser acceptance: choose class and test, verify subject columns and marks, CSV/print layout, missing/absent display, and school isolation
+- [ ] Review very large school pagination: current student list is capped at 1,000 and exam list at 500, with a 20,000 result-row safety limit
+
 ## Teacher exam submission confirmation — 26 October 2026
 - [x] After successful exam/test submission, clear and hide the student marks grid, reset assessment name and total marks, and show an accessible success pop-up
 - [x] If validation or the backend returns an error, show an error pop-up and preserve all previously entered marks for correction/retry
