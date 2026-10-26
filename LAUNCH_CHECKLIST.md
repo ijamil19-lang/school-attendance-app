@@ -218,6 +218,16 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Evaluate device/IP-aware throttling and gateway-level rate limiting; the remaining school-wide 60-failure backstop can still be deliberately triggered
 - [ ] Implement routine cleanup of aged PIN-guess rate-limit rows if necessary
 
+## Security audit continuation — PIN lockout recovery and storage upkeep (26 October 2026)
+- [x] Transactional PIN limiter regression: five failures for one guess activate its 15-minute lock
+- [x] Matching teacher for locked key rejected; after simulated expiry the matching teacher allowed and guess counter reset
+- [x] Confirmed protected guess-limit table inaccessible directly to anon/authenticated, and privileged limiter function cannot be executed by these roles
+- [x] Deployed schoolflow-teacher-kiosk-verify v11: after successful PIN verification, remove only the school's PIN guess records older than seven days; failed cleanup does not block verification
+- [x] Confirmed deployed version active and cleanup code occurs after successful PIN check; no live guess-limit rows or active guess locks at inspection
+- [ ] Live device validation of four-digit PIN login after rate-limit v11 update
+- [ ] Confirm seven-day cleanup executes with test-school aged guess data; no production test rows were inserted persistently
+- [ ] Consider network/IP-based upstream rate limiting and malicious denial-of-service prevention; 60-failure global lock remains reachable
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
