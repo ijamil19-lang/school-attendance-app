@@ -256,6 +256,17 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Perform true concurrent two-connection payment test using dedicated test school and test accounts; sequential transactional tests verify checks but do not prove race behaviour under simultaneous client calls
 - [ ] Validate money calculations under payment edits, parent-fee/wage edits and reversal/refund business rules before general launch
 
+## Security audit continuation — round 24: adjustments and exam integrity (26 October 2026)
+- [x] Deployed database fee and wage parent safeguards before insert/update: verify referenced student/teacher belongs to the school and ensure adjusted balance is nonnegative and not below payments already recorded
+- [x] Rolled-back tests: fee and wage totals cannot be lowered below paid amounts; valid increases allowed; cross-school fee reassignment rejected
+- [x] Deployed exam-result guard before insert/update enforcing matching school and class for student and exam
+- [x] Deployed exam guard preventing class/school reassignment after results have been recorded and ensuring class belongs to school
+- [x] Rolled-back tests: wrong-school exam result rejected, moving recorded exam to another class rejected, benign in-school result update accepted
+- [x] Verified four new database triggers enabled; existing records show 0 overpaid fee records, 0 overpaid wage records and 0 exam-result class/school mismatches
+- [x] Existing data unchanged: four exam results, one fee payment and one wage payment
+- [ ] Verify downstream workflow if a student changes class after results were recorded; direct student class changes may leave historical exam results inconsistent without archive rules
+- [ ] Perform real authenticated user/API and concurrent payment tests using dedicated test accounts before launch
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
