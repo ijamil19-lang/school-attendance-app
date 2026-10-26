@@ -285,6 +285,16 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] End-to-end authenticated browser check of historical results and generated CSV/PDF after a real promotion, including result metadata and period filters
 - [ ] Consider showing the original exam class beside each historical result when the UI is extended
 
+## Dashboard staff attendance summary (26 October 2026)
+- [x] Added Staff Attendance Overview to admin dashboard below the student attendance overview
+- [x] Daily staff donut chart displays active teachers grouped into On site, Signed out and No sign-in, with counts and percentages
+- [x] Teacher-by-teacher dashboard table includes first sign-in, latest sign-out, and status in Pakistan time
+- [x] Dashboard date changes and Today button refresh the staff overview; class filtering remains specific to student attendance
+- [x] Staff data fetched using existing authenticated, admin-authorised, school-scoped teacher attendance report endpoint; no new public database grants
+- [x] Added View full staff attendance button leading to detailed staff attendance section
+- [x] Verified GitHub page updates and report endpoint school-scoped authentication; no teacher, student, GPS, or attendance records modified
+- [ ] Confirm page loads and date filtering on an actual signed-in administrator browser; test zero-attendance day and staff sign-out refresh
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
