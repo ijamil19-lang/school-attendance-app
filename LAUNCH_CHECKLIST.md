@@ -1,3 +1,12 @@
+## Whole Class Results date/subject filtering — 26 October 2026
+- [x] Replaced mixed Test / Exam dropdown with date picker and separate Subject dropdown under Whole Class Results
+- [x] Subjects load dynamically for chosen school class and exam date; duplicate subject entries for different assessments display the assessment title to distinguish them
+- [x] Selected subject filters results without changing saved marks; CSV and Print / Save PDF continue using the filtered table
+- [x] Backend schoolflow-admin-modules v17 adds school-admin-authorised class_result_date_subjects and subject-scoped class_result_sheet
+- [x] Re-read deployed v17 ACTIVE; admin page scripts pass syntax checks; existing historical results remain present
+- [ ] Real signed-in browser test: select 6th A, 24/10/2026, Islamiyat and check 3 marks, CSV and PDF
+- [ ] Evaluate a separate All subjects on a date mode for combined assessments from multiple exam titles if requested
+
 ## Whole class exam/test result sheet — 26 October 2026
 - [x] New Whole Class Results panel in admin Exams & Tests with class and assessment selectors
 - [x] Matrix shows each student, roll number, subject marks, total and percentage; explicitly distinguishes absent students and missing results; includes past class students present in that assessment
