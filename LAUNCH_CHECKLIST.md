@@ -1,3 +1,13 @@
+## Exam marks submission atomicity check — 26 October 2026
+- [x] Inspected teacher exam endpoint and confirmed active school, linked teacher membership, active teacher, assigned class and subject checks
+- [x] Existing exam marks integrity passed: 4 result rows, zero absent-student marks violations and zero invalid present-student marks
+- [x] Fixed two-step exam header/marks saving; created transactional service-role-only RPC schoolflow_submit_exam_results_atomic with school/teacher/subject permissions and complete class marks validation
+- [x] Rolled-back tests: 3-student valid submission succeeds, unassigned subject is rejected, incomplete class marks rejected, no test exams persisted
+- [x] Deployed schoolflow-teacher-exams v5 using atomic RPC; verified ACTIVE and RPC inaccessible to anon/authenticated while service_role can execute
+- [x] Production data unchanged: 4 previously saved exam result rows remain
+- [ ] Run actual teacher-signed-in marks submission and admin report-card PDF verification in browser, using a dedicated test assessment
+- [ ] Consider permission-change concurrency and explicit audit/history for marks edits before broad school rollout
+
 ## Multi-subject / multi-class teacher allocation — 26 October 2026
 - [x] Admin teacher subject allocation now displays checkboxes for multiple subjects as well as multiple classes, with selected-item counts
 - [x] New schoolflow-admin-modules Edge Function v15 action grant_exam_subjects_bulk validates school administrator and active school using existing outer guards, active teacher, classes owned by school, and subjects in school's catalogue
