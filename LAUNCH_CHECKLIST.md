@@ -189,6 +189,15 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Full live mobile sign-in/out and authorised admin reporting should be tested with a dedicated test teacher; this audit did not create attendance events or perform authenticated browser test
 - [ ] Verify GPS-denied and GPS-inaccurate error messages on an actual phone; ensure the administrator configured the right boundary for each school
 
+## Security audit continuation — cross-school permissions (26 October 2026)
+- [x] Simulated authenticated Green Valley administrator in rolled-back SQL transaction: zero Manha school members and teacher profiles visible, own school member visible
+- [x] Simulated authenticated Manha teacher in rolled-back SQL transaction: zero Green Valley school members and teacher profiles visible, own teacher profile visible
+- [x] Inspected privileged Edge Functions: teacher attendance report v4, kiosk admin v7, geofence admin v2, admin modules v13; all check signed-in user and school admin membership, and active school
+- [x] Checked live data: 1 generated four-digit PIN fingerprint, zero duplicate generated PIN fingerprints, zero clock events with missing Storage photos, zero active kiosk sessions
+- [ ] Perform actual two-school authenticated HTTP/API tests using two dedicated test accounts; database role simulations and static Edge Function review do not establish end-to-end API isolation
+- [ ] Verify signed private photo URLs expire on real devices and cannot be created for another school's files
+- [ ] Evaluate kiosk short-PIN brute-force tradeoffs (school-wide five-failure lockout), including device/IP rate limits and admin recovery
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
