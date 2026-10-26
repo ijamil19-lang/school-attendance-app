@@ -228,6 +228,16 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Confirm seven-day cleanup executes with test-school aged guess data; no production test rows were inserted persistently
 - [ ] Consider network/IP-based upstream rate limiting and malicious denial-of-service prevention; 60-failure global lock remains reachable
 
+## Security audit continuation — private photo signed links (26 October 2026)
+- [x] Verified schoolflow-teacher-photos bucket remains private (8 stored objects); existing object paths all match school/teacher and registered/clock photo naming scheme
+- [x] Hardened attendance report v5 to sign only the expected school's teacher clock JPEG file path, not merely a folder prefix
+- [x] Hardened kiosk administration v8 and kiosk PIN verification v12 to sign only matching school's teacher registered photos with expected filename and image extension
+- [x] Re-fetched three ACTIVE functions; existing saved photo references have zero mismatches under new validators
+- [x] Signed URL expiry configured to 120 seconds for registered photos and 300 seconds for attendance photos
+- [ ] Actual signed-link expiry and revocation test must be run with an authorised generated test URL; inspecting configured expiry alone is not an end-to-end test
+- [ ] Real authenticated test proving wrong-school users cannot obtain signed URLs or read photo objects by API
+- [ ] Review exposure of temporary signed photo URLs in logs/browser history and document photo retention/deletion obligations
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
