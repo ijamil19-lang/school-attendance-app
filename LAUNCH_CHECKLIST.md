@@ -208,6 +208,16 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Address school-wide five-failure lockout denial-of-service tradeoff for kiosk PIN verification; a malicious caller can temporarily lock every teacher out
 - [ ] Validate real cross-school API access using dedicated authenticated school accounts and signed photo URLs
 
+## Security audit continuation — PIN guessing mitigation (26 October 2026)
+- [x] Replaced one school-wide five-failure lockout with scoped repeated-PIN guessing limits (5 failures per PIN guess) and an overall school backstop of 60 failures in 15 minutes
+- [x] Created teacher_kiosk_pin_guess_limits with RLS enabled, no public grants and school-scoped keyed fingerprints; no plaintext PIN attempts stored
+- [x] Deployed schoolflow_kiosk_pin_attempt_v2 as service-role-only RPC and switched schoolflow-teacher-kiosk-verify to v10
+- [x] Rolled-back SQL tests: same PIN key locks after five failures, whole school remains open, a different valid teacher key remains allowed, and 60 distinct failures still trigger school backstop
+- [x] Verified v10 active and calling new RPC, anon/authenticated cannot execute RPC, service_role can; no persisted test rows, active sessions, or live school lockouts
+- [ ] Test real mobile wrong PIN behavior, successful PIN after other failed guesses, and 60-failure abuse response with dedicated accounts; do not perform abuse tests against production school
+- [ ] Evaluate device/IP-aware throttling and gateway-level rate limiting; the remaining school-wide 60-failure backstop can still be deliberately triggered
+- [ ] Implement routine cleanup of aged PIN-guess rate-limit rows if necessary
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
