@@ -1,3 +1,10 @@
+## Teacher login and invitation security check — 26 October 2026
+- [x] Inspected deployed schoolflow-create-teacher-login v7, schoolflow-manage-teacher-login v2 and schoolflow-invite-teacher v4: all verify signed-in caller, school-specific administrator role and active school
+- [x] Database consistency: 0 teachers missing email, 4 teachers with linked logins, 0 missing teacher memberships, 0 wrong-role teacher logins, 0 teachers at suspended schools
+- [ ] **Security improvement before production:** schoolflow-create-teacher-login currently includes a temporary password in plain-text email and in an API response. Replace this with a single-use invitation/password-setting link and no password disclosure
+- [ ] Independently verify delivered invitation and reset emails using a dedicated test account; no emails sent or account credentials modified during this check
+- [ ] Test cross-school teacher invitation with actual signed-in administrators and ensure 403 for unauthorised requests
+
 ## Launch readiness check — 26 October 2026 (latest)
 - [x] **Critical fix:** teacher-clock.html previously failed JavaScript parsing because an unescaped apostrophe in a GPS error message terminated its string; fixed in commit 553b301 and re-fetched source validates
 - [x] Rechecked admin.html and teacher-clock.html inline scripts: both parse successfully
