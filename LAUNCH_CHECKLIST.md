@@ -295,6 +295,17 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [x] Verified GitHub page updates and report endpoint school-scoped authentication; no teacher, student, GPS, or attendance records modified
 - [ ] Confirm page loads and date filtering on an actual signed-in administrator browser; test zero-attendance day and staff sign-out refresh
 
+## Required student and teacher profile registration + marital status (26 October 2026)
+- [x] Changed student and teacher registration profile sections from optional to required/core details and expanded them by default
+- [x] Student required fields in admin form: name, admission number, class, date of birth, admission date, guardian name/relationship/phone, home address
+- [x] Teacher required fields in admin form: name, staff ID, phone, address, joining date, employment status, marital status; email and emergency contact remain optional
+- [x] Added nullable teacher_private_profiles.marital_status with constrained options Single, Married, Divorced, Widowed, Prefer not to say; existing records unaffected
+- [x] Included marital status in teacher edit/view and private-profile upsert, and date validation happens before creating base record
+- [x] Corrected editRecord function to async to support loading existing private student profile
+- [x] GitHub source verified for required fields, saved field, and early date validation
+- [ ] Browser end-to-end: add/edit students and teachers, verify empty mandatory fields block save and marital status persists
+- [ ] Future consideration: server-side atomic profile registration so API clients cannot bypass browser-required checks and create partial profiles
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
