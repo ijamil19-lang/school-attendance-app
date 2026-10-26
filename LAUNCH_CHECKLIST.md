@@ -238,6 +238,15 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Real authenticated test proving wrong-school users cannot obtain signed URLs or read photo objects by API
 - [ ] Review exposure of temporary signed photo URLs in logs/browser history and document photo retention/deletion obligations
 
+## Security audit continuation — student finance, exams and storage isolation (26 October 2026)
+- [x] Confirmed sf_student_fees, sf_teacher_wages, sf_exams and sf_exam_results have RLS enabled with no direct SELECT grants to anon/authenticated; current rows: 1 fee, 1 wage, 2 exams, 4 results
+- [x] Simulated Green Valley authenticated administrator inside read-only rolled-back SQL transaction: 0 Manha students and 0 private teacher photos visible
+- [x] Examined storage.objects school-logos INSERT/UPDATE/DELETE policies; folder school ID must satisfy is_school_admin; teacher photo bucket has no direct object SELECT policy for ordinary users
+- [x] Checked stored financial/academic foreign-school references: 0 mismatched student-fee, teacher-wage, student-exam-result and class-exam associations
+- [x] Reviewed schoolflow-admin-modules v13: validates JWT user, school-specific admin membership, active school and scopes operations to requested school
+- [ ] Test finance/exam module Edge API from two real signed-in school accounts; service-role endpoints are not fully proven by simulated SQL or static source audit
+- [ ] Test unauthenticated and wrong-school requests to signed teacher-photo endpoints with dedicated test accounts
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
