@@ -1,3 +1,17 @@
+## Launch readiness check — 26 October 2026 (latest)
+- [x] **Critical fix:** teacher-clock.html previously failed JavaScript parsing because an unescaped apostrophe in a GPS error message terminated its string; fixed in commit 553b301 and re-fetched source validates
+- [x] Rechecked admin.html and teacher-clock.html inline scripts: both parse successfully
+- [x] Verified current versions of 6 main Supabase Edge Functions are ACTIVE; staff attendance report, teacher-account creation and management, school admin modules, kiosk PIN verification and submission contain active-school checks
+- [x] Database integrity audit: 2 schools, 6 students, 4 teachers, 4 exam results, 1 fee record and 1 wage record; 0 cross-school exam results; 0 overpaid fee or wage records; 0 active PIN-guess locks
+- [ ] **Blocking launch:** complete real browser sign-in as school administrator, create/edit student and teacher, send teacher login invite and test password reset, using non-production test people
+- [ ] **Blocking launch:** verify staff kiosk PIN/photo/GPS sign-in and sign-out on actual phone, including school boundary and denied-location scenarios
+- [ ] **Blocking launch:** validate two different authenticated school-admin accounts cannot read, edit or issue private links for each other's records
+- [ ] **Blocking launch:** verify production privacy notice, safeguarding and data-retention arrangements for student, teacher, GPS and photo records, along with database backups and restore procedure
+- [ ] **Blocking launch:** verify email deliverability, production domain/auth redirect allowlist, and subscription/payment flow if launching paid plans
+- [ ] Check mobile responsive profile forms and printing/export of attendance and exam reports
+- [ ] Certificates (school leaving, character, teacher experience) discussed as next feature but not built; do not advertise them as available
+- [ ] Independently verify GitHub Pages deployment and run real authenticated browser workflows; code parse and simulated SQL tests alone do not prove production readiness
+
 # SchoolFlow — Pre-launch acceptance checklist
 Last reviewed: 25 October 2026
 Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
