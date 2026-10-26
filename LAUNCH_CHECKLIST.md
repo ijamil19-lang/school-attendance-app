@@ -247,6 +247,15 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Test finance/exam module Edge API from two real signed-in school accounts; service-role endpoints are not fully proven by simulated SQL or static source audit
 - [ ] Test unauthenticated and wrong-school requests to signed teacher-photo endpoints with dedicated test accounts
 
+## Security audit continuation — payment overpayment and school ownership (26 October 2026)
+- [x] Identified race condition in admin API: outstanding balance checked before fee/wage insert, which could permit concurrent overpayment without a database check
+- [x] Deployed transactional BEFORE INSERT/UPDATE database guards on sf_fee_payments and sf_wage_payments, locking the relevant parent row before validating school ownership, positive amounts and cumulative balance
+- [x] Rolled-back fee tests: reject already-paid overpayment, reject cross-school fee, accept valid partial amount, reject second payment exceeding remaining balance
+- [x] Rolled-back wage tests: reject cross-school wage, accept valid partial amount, reject second payment exceeding remaining balance
+- [x] Confirmed both triggers enabled and unchanged production totals: one fee payment (2,000.00), one wage payment (28,000.00)
+- [ ] Perform true concurrent two-connection payment test using dedicated test school and test accounts; sequential transactional tests verify checks but do not prove race behaviour under simultaneous client calls
+- [ ] Validate money calculations under payment edits, parent-fee/wage edits and reversal/refund business rules before general launch
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
