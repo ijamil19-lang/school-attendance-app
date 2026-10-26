@@ -1,3 +1,13 @@
+## School-branded reports and exports — 26 October 2026
+- [x] Daily attendance, monthly attendance, individual student attendance and teacher attendance PDFs now use school name as heading and attempt to embed the uploaded school logo
+- [x] Whole Class Results print/PDF view uses school name and uploaded logo rather than a SchoolFlow heading
+- [x] Student report-card existing school-name/logo header retained; removed SchoolFlow 'SF' placeholder if logo not uploaded
+- [x] CSV attendance, monthly attendance, whole-class results and teacher Excel exports carry school name in the data; key filenames use school name
+- [x] Existing school logo is sourced from the authenticated dashboard's school branding; no school data modified
+- [x] Re-fetched admin JavaScript and verified it passes static syntax check
+- [ ] Browser export checks: test all PDFs and printouts with uploaded logo (including cross-origin image loading), and without logo; confirm print, page breaks, CSV and Excel
+- [ ] Note CSV/Excel files do not support embedding image logos in the ordinary tabular export; school name is included instead
+
 ## Whole Class Results date/subject filtering — 26 October 2026
 - [x] Replaced mixed Test / Exam dropdown with date picker and separate Subject dropdown under Whole Class Results
 - [x] Subjects load dynamically for chosen school class and exam date; duplicate subject entries for different assessments display the assessment title to distinguish them
