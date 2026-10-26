@@ -276,6 +276,15 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Consider explicit class-enrolment history and controlled cross-school transfer workflow for future versions, including foreign-key handling for old records
 - [ ] Perform authenticated cross-school API tests with dedicated signed-in test users
 
+## Security audit continuation — round 26: historical result reporting (26 October 2026)
+- [x] Found report visibility bug: student_result_sheet filtered exams to student's selected/current class, hiding assessments from previous classes after promotion
+- [x] Deployed schoolflow-admin-modules v14: student still must belong to requested active school and selected current class, but assessment lookup includes all exam classes within same school
+- [x] Rolled-back promotion regression using a student with saved results: old report class filter returned 0; revised school-scoped all-history query returned 1
+- [x] Updated admin result-sheet guidance to explicitly include previous classes in historical results
+- [x] No actual students moved and no results or marks changed
+- [ ] End-to-end authenticated browser check of historical results and generated CSV/PDF after a real promotion, including result metadata and period filters
+- [ ] Consider showing the original exam class beside each historical result when the UI is extended
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
