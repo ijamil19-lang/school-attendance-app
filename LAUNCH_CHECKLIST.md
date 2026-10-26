@@ -312,6 +312,14 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Test browser teacher creation with missing/invalid and valid email, and then send teacher invitation
 - [ ] Check existing teacher profiles without email and request completion before activating their web login
 
+## Registration form redesign (26 October 2026)
+- [x] Redesigned student registration into six labelled cards: student, academic, guardian, consent, additional contacts, and address
+- [x] Redesigned teacher registration into three labelled cards: identity/login, employment, and contact/emergency details
+- [x] Improved field sizing, responsive 12-column CSS grid, full-width addresses, checkbox consent panels, Save/Clear actions, and visible required-field indicators
+- [x] Kept existing form inputs, names, validations, date masks, save flows, and edit-prefill logic
+- [x] Fixed teacher edit compatibility with new always-visible cards; verified admin-page JavaScript syntax and required email/marital status fields
+- [ ] Perform authenticated browser add/edit form check on desktop and mobile, including editing existing students and teachers and verifying dropdown/date-field behavior
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
