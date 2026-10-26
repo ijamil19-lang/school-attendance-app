@@ -267,6 +267,15 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Verify downstream workflow if a student changes class after results were recorded; direct student class changes may leave historical exam results inconsistent without archive rules
 - [ ] Perform real authenticated user/API and concurrent payment tests using dedicated test accounts before launch
 
+## Security audit continuation — round 25: student promotions and historical results (26 October 2026)
+- [x] Added student class-transfer database trigger: destination class must belong to same school; prohibit transfer to another school when exam results or fees exist
+- [x] Updated exam-result ownership trigger to preserve legitimate updates of existing historical exam results after same-school student promotion, while rejecting new results linked to previous classes and all wrong-school records
+- [x] Rolled-back tests: student promoted to another same-school class, existing historical result update accepted, new result from previous class rejected, cross-school transfer rejected, return to original class accepted
+- [x] Confirmed existing 4 exam results remain unchanged after tests; no real students were transferred
+- [ ] Verify user-facing result-sheet UI displays historical results after promotion; current admin report queries results by selected current class, so historic records may not be shown in that view
+- [ ] Consider explicit class-enrolment history and controlled cross-school transfer workflow for future versions, including foreign-key handling for old records
+- [ ] Perform authenticated cross-school API tests with dedicated signed-in test users
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
