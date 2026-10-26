@@ -198,6 +198,16 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Verify signed private photo URLs expire on real devices and cannot be created for another school's files
 - [ ] Evaluate kiosk short-PIN brute-force tradeoffs (school-wide five-failure lockout), including device/IP rate limits and admin recovery
 
+## Security audit continuation — round 18 (26 October 2026)
+- [x] Found PIN rotation gap: old previously verified kiosk session could survive until its 120-second expiration
+- [x] Added active database trigger schoolflow_revoke_teacher_sessions_after_pin_change on teacher_kiosk_credentials updating pin_hash; changes atomically revoke the corresponding teacher's issued kiosk sessions
+- [x] Revoked anonymous and ordinary authenticated direct execute rights on security-definer trigger function
+- [x] Transactional regression test: temporary active kiosk session count went from 1 before PIN rotation to 0 afterward; transaction rolled back with no live credentials or attendance changed
+- [x] Verified trigger enabled and no test credential hashes persisted
+- [ ] Perform authenticated end-to-end test: verify PIN, reset PIN, submit with the old session and expect rejection
+- [ ] Address school-wide five-failure lockout denial-of-service tradeoff for kiosk PIN verification; a malicious caller can temporarily lock every teacher out
+- [ ] Validate real cross-school API access using dedicated authenticated school accounts and signed photo URLs
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
