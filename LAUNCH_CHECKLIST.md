@@ -1,3 +1,13 @@
+## Multi-subject / multi-class teacher allocation — 26 October 2026
+- [x] Admin teacher subject allocation now displays checkboxes for multiple subjects as well as multiple classes, with selected-item counts
+- [x] New schoolflow-admin-modules Edge Function v15 action grant_exam_subjects_bulk validates school administrator and active school using existing outer guards, active teacher, classes owned by school, and subjects in school's catalogue
+- [x] Maximum of 200 combinations per request; uses upsert with ignoreDuplicates so prior teacher subject permissions are preserved rather than replaced
+- [x] Existing one-subject allocation action retained for backwards compatibility
+- [x] Subject creation panel refreshes multi-selection and automatically checks newly created subject
+- [x] Confirmed admin HTML JavaScript parses successfully; Edge Function ACTIVE v15 and saved database state remains 9 permission rows, 0 cross-school references
+- [ ] Browser end-to-end: select two subjects and two classes, save, reload and check four combinations; repeat save and confirm no duplicates
+- [ ] Browser authenticated cross-school tests of new bulk API using separate admin accounts; source validation is not equivalent to a live test
+
 ## Teacher passwordless invitation remediation — 26 October 2026
 - [x] Replaced schoolflow-create-teacher-login v7 with v8: generates Supabase type=invite one-time action link and emails it via existing Resend configuration, without setting a temporary password
 - [x] Teacher creation response no longer contains temporary passwords or secret invitation links; new teacher can set their own password on attendance.html invitation landing
