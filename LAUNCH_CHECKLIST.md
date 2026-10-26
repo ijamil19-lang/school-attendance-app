@@ -306,6 +306,12 @@ Status: PRE-LAUNCH. Do not onboard paying schools until critical tests pass.
 - [ ] Browser end-to-end: add/edit students and teachers, verify empty mandatory fields block save and marital status persists
 - [ ] Future consideration: server-side atomic profile registration so API clients cannot bypass browser-required checks and create partial profiles
 
+## Teacher email required for login links (26 October 2026)
+- [x] Teacher email is required on the admin add/edit profile form and validated before the record is saved
+- [x] Confirmed admin script parses after the change; teacher PIN-only attendance kiosk remains independent of email
+- [ ] Test browser teacher creation with missing/invalid and valid email, and then send teacher invitation
+- [ ] Check existing teacher profiles without email and request completion before activating their web login
+
 ## P0 — security and reliability, launch blockers
 - [ ] Multi-tenant isolation: School A administrator cannot read or change School B students, fees, teachers, exam results, photos, reports or configuration (try both browser and API)
 - [ ] Teacher scope: attendance only assigned class, exam marks only allocated class/subject; cannot tamper with student/school IDs
