@@ -1,3 +1,13 @@
+## Multi-school isolation audit — 26 October 2026, 22:07 UK
+- [x] Reviewed RLS on students, teacher_profiles, student_private_profiles, teacher_private_profiles, classes, attendance_records; policies restrict access by active school and administrator/assigned-teacher role
+- [x] Simulated authenticated Green Valley administrator in a rolled-back PostgreSQL transaction: Manha student records, teacher records, classes, private profiles and attendance all returned 0 cross-school rows
+- [x] Simulated authenticated Manha administrator: own school visible (6 students, 5 classes), other school's administrator check false
+- [x] Simulated cross-school updates as Green Valley administrator: 0 Manha student rows and 0 Manha teacher rows changed; transaction rolled back
+- [x] Direct SELECT on financial tables by authenticated role rejected with permission-denied; exam/finance tables use RLS and do not grant direct authenticated SELECT
+- [x] Checked ACTIVE schoolflow-admin-modules v17, schoolflow-teacher-exams v5 and schoolflow-teacher-attendance-report v5: authentication and school-scoped role checks present
+- [ ] Perform true two-browser cross-school REST/Edge Function tests with independently signed-in accounts; SQL impersonation and source inspection do not replace this
+- [ ] Expand tests to photo storage signed links and school private documents using live authenticated browser sessions
+
 ## School-branded reports and exports — 26 October 2026
 - [x] Daily attendance, monthly attendance, individual student attendance and teacher attendance PDFs now use school name as heading and attempt to embed the uploaded school logo
 - [x] Whole Class Results print/PDF view uses school name and uploaded logo rather than a SchoolFlow heading
