@@ -1,3 +1,12 @@
+## Backup and post-restore integrity readiness — 27 October 2026
+- [x] Audited eight school-boundary integrity relations: exam results, student fees, fee payments, teacher wages, wage payments, exam teaching assignments, family links, attendance; all eight mismatches = 0
+- [x] Added BACKUP_RECOVERY_RUNBOOK.md with read-only integrity SQL, production-safe isolated restore procedure, Supabase Storage file backup scope, secrets and auth settings, test safeguards, RPO/RTO and rollback verification
+- [x] Verified runbook present on GitHub
+- [ ] CRITICAL LAUNCH BLOCKER: project owner must confirm current backup timestamp/retention in Supabase Database > Backups
+- [ ] Run and document a **real isolated restore**; no live production restore performed
+- [ ] Back up the physical bytes of both Storage buckets separately (teacher photos and school logos)
+- [ ] Approve encrypted recovery storage, access policies, retention and recovery goals
+
 ## School suspension and backup readiness — 27 October 2026
 - [x] Verified current project ACTIVE_HEALTHY in eu-west-1 (Postgres 17); both existing schools active before tests
 - [x] Verified platform_set_school_active checks is_platform_owner and school existence before changing status
