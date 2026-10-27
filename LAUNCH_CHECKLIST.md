@@ -1,3 +1,16 @@
+## Teacher account deactivation and revocation — 27 October 2026
+- [x] Inspected live teacher exam endpoint v5, kiosk PIN verification v12, kiosk attendance submission v3 and teacher password endpoint v5: all enforce active school and active teacher profile
+- [x] Added school-admin-authorised set_active action to schoolflow-manage-teacher-login v3; can disable or reactivate an existing teacher without deleting attendance, subjects, results or credentials
+- [x] Disabling a teacher removes their outstanding teacher_kiosk_sessions tokens in addition to blocking new verification; any cleanup failure is logged
+- [x] Added Disable teacher / Reactivate teacher buttons to administration Teachers page with confirmation
+- [x] Rollback-only test: temporarily set an assigned teacher inactive; active-profile criteria in exam and kiosk access rejected the profile, and all changes were rolled back
+- [x] Verified backend v3 ACTIVE and latest administration scripts parse; no real teacher left disabled by this task
+- [ ] Verify with two authenticated browser sessions: active teacher exam/attendance works, disable blocks app actions, reactivation restores access
+- [ ] Existing authentication session itself may remain valid after disabling the school-level teacher profile; backend operations are denied, not necessarily Supabase authentication
+- [ ] Previously issued photo signed URLs remain valid until their short expiry (120–300 seconds)
+- [ ] Run similarly rolled-back full school suspension checks and perform production backup/restore acceptance
+- [ ] Bank fee integration deferred to later release
+
 ## Multi-school isolation audit — 26 October 2026, 22:07 UK
 - [x] Reviewed RLS on students, teacher_profiles, student_private_profiles, teacher_private_profiles, classes, attendance_records; policies restrict access by active school and administrator/assigned-teacher role
 - [x] Simulated authenticated Green Valley administrator in a rolled-back PostgreSQL transaction: Manha student records, teacher records, classes, private profiles and attendance all returned 0 cross-school rows
