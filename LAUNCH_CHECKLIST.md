@@ -1,3 +1,12 @@
+## Admin dashboard navigation redesign — 27 October 2026
+- [x] Placed School Settings as the first group in the admin navigation
+- [x] Added dedicated Reports group for Student Attendance Reports, Teacher Attendance Reports and Exam & Test Reports
+- [x] Exam & Test Reports is a read-only reporting view with existing Whole Class Results and Student Combined Results sheets, CSV and PDF actions; entry/editing stays under Academics > Exams & Tests
+- [x] Preserved the existing daily/monthly/student attendance reports, teacher attendance report and kiosk management, fee and wage modules, and exam submission functions
+- [x] Static validation: all admin inline scripts compile; all report panel IDs and navigation groups retained
+- [ ] Authenticated desktop/mobile acceptance: navigate Settings; Student Attendance Reports; Teacher Attendance Reports; Exam & Test Reports; ensure correct panels, exports and returning to Exams & Tests restores editor
+- [ ] User provided empty item 3; confirm any additional design change when specified
+
 ## Backup and post-restore integrity readiness — 27 October 2026
 - [x] Audited eight school-boundary integrity relations: exam results, student fees, fee payments, teacher wages, wage payments, exam teaching assignments, family links, attendance; all eight mismatches = 0
 - [x] Added BACKUP_RECOVERY_RUNBOOK.md with read-only integrity SQL, production-safe isolated restore procedure, Supabase Storage file backup scope, secrets and auth settings, test safeguards, RPO/RTO and rollback verification
