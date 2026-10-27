@@ -1,3 +1,16 @@
+## School suspension and backup readiness — 27 October 2026
+- [x] Verified current project ACTIVE_HEALTHY in eu-west-1 (Postgres 17); both existing schools active before tests
+- [x] Verified platform_set_school_active checks is_platform_owner and school existence before changing status
+- [x] Rolled-back suspension/reactivation test: active school admin permission true before, false while suspended, true on reactivation; all 6 student records retained
+- [x] As authenticated school administrator with school temporarily suspended inside an SQL transaction, RLS returned 0 visible students, teachers and classes, and is_school_admin=false
+- [x] All test changes rolled back, with no live school suspension; core admin/teacher exam/kiosk/report Edge Functions remained ACTIVE
+- [ ] **Launch blocker:** independently verify Supabase database backups are enabled, recent and restorable through project Dashboard > Database > Backups; tool does not expose backup schedule/history
+- [ ] Document backup retention, recovery point objective and recovery time objective; perform a restore into an isolated test project before handling critical school records
+- [ ] Confirm storage teacher photos and school logos have separate backup/export and restore plan; database-only restore does not necessarily restore Storage object bytes
+- [ ] Arrange off-site periodic school data exports (including attendance, results, fees, payroll and guardian details) with encryption and access controls, without exposing personal data
+- [ ] Validate actual admin and teacher sessions, kiosk behavior and subscription UI against suspended school in browser
+- [ ] Bank reconciliation postponed to a future release per request
+
 ## Teacher account deactivation and revocation — 27 October 2026
 - [x] Inspected live teacher exam endpoint v5, kiosk PIN verification v12, kiosk attendance submission v3 and teacher password endpoint v5: all enforce active school and active teacher profile
 - [x] Added school-admin-authorised set_active action to schoolflow-manage-teacher-login v3; can disable or reactivate an existing teacher without deleting attendance, subjects, results or credentials
