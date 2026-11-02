@@ -635,12 +635,12 @@ $('loadClassResults').onclick=async()=>{
   const output=$('classResultsOutput');const table=document.createElement('table');
   table.style.cssText='border-collapse:collapse;width:100%;min-width:620px;margin:12px 0;font-size:13px';
   const header=table.createTHead().insertRow();
-  const columns=['Roll No.','Student',...result.subjects,'Total scored','Percentage'];
+  const columns=['Roll No.','Student',...result.subjects,...(result.subjects.length>1?['Total scored']:[]),'Percentage'];
   for(const label of columns){const th=document.createElement('th');th.textContent=label;th.style.cssText='text-align:left;padding:10px;border:1px solid #dce6eb;background:#eaf4f7;white-space:nowrap';header.append(th)}
   const body=table.createTBody();
   for(const row of rows){
    const tr=body.insertRow();const st=row.student;
-   const values=[st.roll_number??st.student_code??'—',st.full_name,...row.cells.map(c=>c.text),row.total?row.obtained+' / '+row.total:'—',row.percentage===null?'—':row.percentage.toFixed(1)+'%'];
+   const values=[st.roll_number??st.student_code??'—',st.full_name,...row.cells.map(c=>c.text),...(result.subjects.length>1?[row.total?row.obtained+' / '+row.total:'—']:[]),row.percentage===null?'—':row.percentage.toFixed(1)+'%'];
    for(const value of values){const td=tr.insertCell();td.textContent=String(value);td.style.cssText='padding:9px;border:1px solid #dce6eb;white-space:nowrap'}
   }
   output.replaceChildren(table);
