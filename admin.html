@@ -702,4 +702,27 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
 
 function jumpToAdminPanel(tab){const target=tab==='dashboard'?'dashboardPanel':tab==='reports'?'reportsPanel':tab==='calendar'?'calendarPanel':tab==='promotions'?'promotionsPanel':tab==='teacherclock'?'teacherclockPanel':tab==='geofence'?'geofencePanel':['finfees','finwages','finexams','reportexams'].includes(tab)?'financePanel':'managementPanel';const panel=$(target);if(!panel)return;const jump=()=>{if(panel.classList.contains('hidden'))return;const top=Math.max(0,window.scrollY+panel.getBoundingClientRect().top-16);window.scrollTo({top,behavior:'auto'});};requestAnimationFrame(()=>requestAnimationFrame(jump));setTimeout(jump,120);setTimeout(jump,400)}
 $('tabs').addEventListener('click',e=>{const button=e.target.closest('button[data-tab]');if(!button)return;active=button.dataset.tab;render();if(document.getElementById('adminSidebar').classList.contains('sidebar-open'))toggleAdminSidebar(false);jumpToAdminPanel(active)});(async()=>{await new Promise(resolve=>setTimeout(resolve,700));if(!await showInviteSetup())await init()})();
+
+async function printSchoolflowExitCertificate(kind,id){
+ const student=kind==='student',r=(student?data.students:data.teachers).find(x=>x.id===id);
+ if(!r||!r.departure_date){notify('A formal departure record is required.',true);return}
+ const result=await client.from('schools').select('name,logo_url,address,contact_phone').eq('id',schoolId).single();
+ if(result.error){notify(result.error.message,true);return}
+ let joiningDate='Not recorded';
+ if(!student){const p=await client.from('teacher_private_profiles').select('joining_date').eq('school_id',schoolId).eq('teacher_id',id).maybeSingle();if(p.error){notify(p.error.message,true);return}joiningDate=p.data?.joining_date||'Not recorded'}
+ const w=window.open('','_blank');if(!w){notify('Allow popups to print certificates.',true);return}
+ const d=w.document,school=result.data;
+ d.title=student?'School Leaving Certificate':'Teacher Experience Certificate';
+ const style=d.createElement('style');style.textContent='@page{size:A4;margin:18mm}body{font:16px Georgia,serif;color:#172d3a;padding:18px}header{text-align:center;border-bottom:3px double #087486;padding-bottom:16px}header img{max-width:85px;max-height:85px}h1{font-size:26px}h2{text-align:center;text-decoration:underline;margin:32px 0}.field{padding:9px;border-bottom:1px solid #ddd}.sign{display:flex;justify-content:space-between;margin-top:85px;gap:24px}p{line-height:1.8}';d.head.append(style);
+ const h=d.createElement('header');if(school.logo_url&&school.logo_url.startsWith('https://')){const img=d.createElement('img');img.src=school.logo_url;img.alt='School logo';h.append(img)}
+ const title=d.createElement('h1');title.textContent=school.name||'School';h.append(title);const addr=d.createElement('div');addr.textContent=[school.address,school.contact_phone].filter(Boolean).join(' · ');h.append(addr);d.body.append(h);
+ const heading=d.createElement('h2');heading.textContent=student?'SCHOOL LEAVING CERTIFICATE':'TEACHER EXPERIENCE CERTIFICATE';d.body.append(heading);
+ const details=student?[['Student',r.full_name],['Admission number',r.student_code],['Last class',data.classes.find(c=>c.id===r.class_id)?.name||'Unassigned'],['Leaving date',r.departure_date],['Reason',r.departure_reason||'Not recorded']]:[['Teacher',r.full_name],['Joining date',joiningDate],['Last working date',r.departure_date],['Reason',r.departure_reason||'Not recorded']];
+ for(const [key,value] of details){const line=d.createElement('div');line.className='field';const bold=d.createElement('strong');bold.textContent=key+': ';line.append(bold,d.createTextNode(String(value)));d.body.append(line)}
+ const p=d.createElement('p');p.textContent=student?'This certificate confirms the recorded school departure of the student named above.':'This certificate confirms the recorded employment period of the teacher named above.';d.body.append(p);
+ const sig=d.createElement('div');sig.className='sign';for(const label of ['Issued: '+new Date().toLocaleDateString('en-GB'),'Principal / Authorised signature: ______________']){const el=d.createElement('span');el.textContent=label;sig.append(el)}d.body.append(sig);w.focus();w.print();
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-exit-print]');if(b){const pair=b.dataset.exitPrint.split(':');printSchoolflowExitCertificate(pair[0],pair[1])}});
+const schoolflowPreviousRender=render;
+render=function(){const output=schoolflowPreviousRender.apply(this,arguments);if(active==='students'||active==='teachers'){const teacher=active==='teachers';for(const r of (teacher?data.teachers:data.students)){if(!r.departure_date)continue;const b=document.querySelector('[data-delete="'+r.id+'"]');if(!b||b.parentElement.querySelector('[data-exit-print]'))continue;const btn=document.createElement('button');btn.type='button';btn.className='secondary';btn.dataset.exitPrint=(teacher?'teacher:':'student:')+r.id;btn.textContent=teacher?'Experience Certificate':'Leaving Certificate';b.parentElement.append(btn)}}return output};
 </script></body></html>
