@@ -633,9 +633,13 @@ $('loadClassResults').onclick=async()=>{
   const rows=prepareClassResultRows(result);
   classResultData={...result,displayRows:rows};
   const output=$('classResultsOutput');const table=document.createElement('table');
+  const singleSubject=result.subjects.length===1;
+  const subjectHeading=singleSubject?document.createElement('p'):null;
+  if(subjectHeading){subjectHeading.className='class-result-subject';subjectHeading.style.cssText='font-size:15px;font-weight:700;margin:14px 0 4px';subjectHeading.textContent='Subject: '+result.subjects[0]}
+
   table.style.cssText='border-collapse:collapse;width:100%;min-width:620px;margin:12px 0;font-size:13px';
   const header=table.createTHead().insertRow();
-  const columns=['Roll No.','Student',...result.subjects,...(result.subjects.length>1?['Total scored']:[]),'Percentage'];
+  const columns=['Roll No.','Student',...(singleSubject?['Marks Obtained']:result.subjects),...(result.subjects.length>1?['Total scored']:[]),'Percentage'];
   for(const label of columns){const th=document.createElement('th');th.textContent=label;th.style.cssText='text-align:left;padding:10px;border:1px solid #dce6eb;background:#eaf4f7;white-space:nowrap';header.append(th)}
   const body=table.createTBody();
   for(const row of rows){
@@ -643,7 +647,7 @@ $('loadClassResults').onclick=async()=>{
    const values=[st.roll_number??st.student_code??'—',st.full_name,...row.cells.map(c=>c.text),...(result.subjects.length>1?[row.total?row.obtained+' / '+row.total:'—']:[]),row.percentage===null?'—':row.percentage.toFixed(1)+'%'];
    for(const value of values){const td=tr.insertCell();td.textContent=String(value);td.style.cssText='padding:9px;border:1px solid #dce6eb;white-space:nowrap'}
   }
-  output.replaceChildren(table);
+  output.replaceChildren(...(subjectHeading?[subjectHeading,table]:[table]));
   $('downloadClassResults').disabled=false;$('printClassResults').disabled=false;
   $('classResultsStatus').textContent=result.class_name+' · '+result.exam.title+' · '+result.exam.exam_date+' — '+rows.length+' students, '+result.subjects.length+' subject(s). Missing marks appear as —; absences are marked Absent and excluded from percentage.';
  }catch(e){$('classResultsStatus').textContent='Could not load whole class results: '+e.message}finally{button.disabled=false}
@@ -651,8 +655,8 @@ $('loadClassResults').onclick=async()=>{
 function classResultsCsvValue(value){return '"'+String(value??'').replace(/"/g,'""')+'"'}
 $('downloadClassResults').onclick=()=>{
  if(!classResultData)return;
- const x=classResultData;const columns=['School','Roll No.','Student','Status',...x.subjects,'Total scored','Percentage'];
- const rows=x.displayRows.map(r=>[reportSchoolName(),r.student.roll_number??r.student.student_code??'',r.student.full_name,r.student.class_id===x.exam.class_id?'Current':'Former',...r.cells.map(c=>c.text),r.total?r.obtained+' / '+r.total:'',r.percentage===null?'':r.percentage.toFixed(1)+'%']);
+ const x=classResultData;const singleSubject=x.subjects.length===1;const columns=['School','Roll No.','Student','Status',...(singleSubject?['Subject','Marks Obtained']:x.subjects),...(singleSubject?[]:['Total scored']),'Percentage'];
+ const rows=x.displayRows.map(r=>[reportSchoolName(),r.student.roll_number??r.student.student_code??'',r.student.full_name,r.student.class_id===x.exam.class_id?'Current':'Former',...(singleSubject?[x.subjects[0]]:[]),...r.cells.map(c=>c.text),...(singleSubject?[]:[r.total?r.obtained+' / '+r.total:'']),r.percentage===null?'':r.percentage.toFixed(1)+'%']);
  const csv='\uFEFF'+[columns,...rows].map(row=>row.map(classResultsCsvValue).join(',')).join('\r\n');
  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=reportFileStem()+'_Class_Results_'+x.exam.exam_date+'.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 };
@@ -662,7 +666,8 @@ $('printClassResults').onclick=()=>{
  if(!table)return;
  const w=window.open('','_blank');if(!w){$('classResultsStatus').textContent='Allow pop-ups to print or save the class results as PDF.';return}
  const title=x.class_name+' — '+x.exam.title+' ('+x.exam.exam_date+')';
- w.document.open();w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>body{font:12px Arial,sans-serif;margin:22px}h1{font-size:20px}table{border-collapse:collapse;width:100%;font-size:11px}th,td{border:1px solid #888;padding:6px;text-align:left}th{background:#e9eff2}@page{size:A4 landscape;margin:12mm}</style></head><body><header style="display:flex;align-items:center;gap:14px;border-bottom:2px solid #16596b;padding-bottom:12px;margin-bottom:14px">'+reportSchoolPrintLogo()+'<div><h1>'+esc(reportSchoolName())+'</h1><p>Whole Class Results</p></div></header><h2>'+esc(title)+'</h2><p>Missing results: — · Absent students excluded from percentages</p>'+table.outerHTML+'</body></html>');w.document.close();w.focus();
+ const subjectHeading=x.subjects.length===1?'<p style="font-size:15px;font-weight:bold;margin:14px 0 6px">Subject: '+esc(x.subjects[0])+'</p>':'';
+ w.document.open();w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>body{font:12px Arial,sans-serif;margin:22px}h1{font-size:20px}table{border-collapse:collapse;width:100%;font-size:11px}th,td{border:1px solid #888;padding:6px;text-align:left}th{background:#e9eff2}@page{size:A4 landscape;margin:12mm}</style></head><body><header style="display:flex;align-items:center;gap:14px;border-bottom:2px solid #16596b;padding-bottom:12px;margin-bottom:14px">'+reportSchoolPrintLogo()+'<div><h1>'+esc(reportSchoolName())+'</h1><p>Whole Class Results</p></div></header><h2>'+esc(title)+'</h2>'+subjectHeading+'<p>Missing results: — · Absent students excluded from percentages</p>'+table.outerHTML+'</body></html>');w.document.close();w.focus();
 };
 
 let combinedResultRows=[],combinedSourceRows=[],combinedResultInfo=null,combinedReportCards=[];let schoolGradeBands=[],studentReportRemark='';
