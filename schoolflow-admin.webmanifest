@@ -1,0 +1,17 @@
+{
+  "name": "SchoolFlow Admin",
+  "short_name": "SF Admin",
+  "start_url": "/admin.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f3f7fa",
+  "theme_color": "#075363",
+  "icons": [
+    {
+      "src": "/schoolflow-admin-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
