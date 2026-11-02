@@ -639,12 +639,12 @@ $('loadClassResults').onclick=async()=>{
 
   table.style.cssText='border-collapse:collapse;width:100%;min-width:620px;margin:12px 0;font-size:13px';
   const header=table.createTHead().insertRow();
-  const columns=['Roll No.','Student',...(singleSubject?['Marks Obtained']:result.subjects),...(result.subjects.length>1?['Total scored']:[]),'Percentage'];
+  const columns=['Roll No.','Student',...(singleSubject?['Marks Obtained']:result.subjects),'Percentage'];
   for(const label of columns){const th=document.createElement('th');th.textContent=label;th.style.cssText='text-align:left;padding:10px;border:1px solid #dce6eb;background:#eaf4f7;white-space:nowrap';header.append(th)}
   const body=table.createTBody();
   for(const row of rows){
    const tr=body.insertRow();const st=row.student;
-   const values=[st.roll_number??st.student_code??'—',st.full_name,...row.cells.map(c=>c.text),...(result.subjects.length>1?[row.total?row.obtained+' / '+row.total:'—']:[]),row.percentage===null?'—':row.percentage.toFixed(1)+'%'];
+   const values=[st.roll_number??st.student_code??'—',st.full_name,...row.cells.map(c=>c.text),row.percentage===null?'—':row.percentage.toFixed(1)+'%'];
    for(const value of values){const td=tr.insertCell();td.textContent=String(value);td.style.cssText='padding:9px;border:1px solid #dce6eb;white-space:nowrap'}
   }
   output.replaceChildren(...(subjectHeading?[subjectHeading,table]:[table]));
@@ -655,8 +655,8 @@ $('loadClassResults').onclick=async()=>{
 function classResultsCsvValue(value){return '"'+String(value??'').replace(/"/g,'""')+'"'}
 $('downloadClassResults').onclick=()=>{
  if(!classResultData)return;
- const x=classResultData;const singleSubject=x.subjects.length===1;const columns=['School','Roll No.','Student','Status',...(singleSubject?['Subject','Marks Obtained']:x.subjects),...(singleSubject?[]:['Total scored']),'Percentage'];
- const rows=x.displayRows.map(r=>[reportSchoolName(),r.student.roll_number??r.student.student_code??'',r.student.full_name,r.student.class_id===x.exam.class_id?'Current':'Former',...(singleSubject?[x.subjects[0]]:[]),...r.cells.map(c=>c.text),...(singleSubject?[]:[r.total?r.obtained+' / '+r.total:'']),r.percentage===null?'':r.percentage.toFixed(1)+'%']);
+ const x=classResultData;const singleSubject=x.subjects.length===1;const columns=['School','Roll No.','Student','Status',...(singleSubject?['Subject','Marks Obtained']:x.subjects),'Percentage'];
+ const rows=x.displayRows.map(r=>[reportSchoolName(),r.student.roll_number??r.student.student_code??'',r.student.full_name,r.student.class_id===x.exam.class_id?'Current':'Former',...(singleSubject?[x.subjects[0]]:[]),...r.cells.map(c=>c.text),r.percentage===null?'':r.percentage.toFixed(1)+'%']);
  const csv='\uFEFF'+[columns,...rows].map(row=>row.map(classResultsCsvValue).join(',')).join('\r\n');
  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=reportFileStem()+'_Class_Results_'+x.exam.exam_date+'.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 };
