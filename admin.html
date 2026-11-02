@@ -598,6 +598,7 @@ $('classResultsClass').addEventListener('change',()=>{$('classResultsDate').valu
 $('classResultsDate').addEventListener('change',loadClassSubjectsForDate);
 $('classResultsSubject').addEventListener('change',()=>{clearClassResults();$('classResultsStatus').textContent='Click View whole class results.'});
 const classResultNumber=x=>Number.isFinite(Number(x))?Number(x):0;
+const resultRollSort=(a,b)=>{const roll=x=>String(x.roll_number??'').trim();const ar=roll(a),br=roll(b);if(!ar&&!br)return a.full_name.localeCompare(b.full_name);if(!ar)return 1;if(!br)return -1;return ar.localeCompare(br,undefined,{numeric:true,sensitivity:'base'})||a.full_name.localeCompare(b.full_name)};
 function prepareClassResultRows(result){
  const map=new Map();
  for(const r of result.rows){
@@ -605,7 +606,7 @@ function prepareClassResultRows(result){
   map.get(r.student_id).set(r.subject,r);
  }
  const subjects=result.subjects||[];
- const students=[...result.students].sort((a,b)=>(a.roll_number??999999)-(b.roll_number??999999)||a.full_name.localeCompare(b.full_name));
+ const students=[...result.students].sort(resultRollSort);
  return students.map(st=>{
   const values=map.get(st.id)||new Map();
   let obtained=0,total=0,recorded=0,absent=0;
@@ -673,7 +674,7 @@ $('printClassResults').onclick=()=>{
 let combinedResultRows=[],combinedSourceRows=[],combinedResultInfo=null,combinedReportCards=[];let schoolGradeBands=[],studentReportRemark='';
 function resetStudentResultsSheet(clearSource=true){combinedResultRows=[];combinedReportCards=[];if(clearSource){combinedSourceRows=[];combinedResultInfo=null}$('resultSheetCSV').disabled=true;$('resultSheetPrint').disabled=true;$('resultSheetOutput').replaceChildren()}
 function populateStudentResultFilters(){loadSchoolGrades();const cl=$('resultSheetClass'),previous=cl.value;cl.replaceChildren(new Option('Choose class',''));for(const item of [...data.classes].sort((a,b)=>a.name.localeCompare(b.name)))cl.add(new Option(item.name,item.id));if(data.classes.some(c=>c.id===previous))cl.value=previous;populateResultStudents()}
-function populateResultStudents(){const select=$('resultSheetStudent'),previous=select.value,id=$('resultSheetClass').value;select.replaceChildren(new Option('Choose student',''));for(const st of [...data.students].filter(x=>x.class_id===id).sort((a,b)=>(a.roll_number??999999)-(b.roll_number??999999)||a.full_name.localeCompare(b.full_name)))select.add(new Option((st.roll_number??st.student_code??'—')+' · '+st.full_name,st.id));if([...select.options].some(o=>o.value===previous))select.value=previous;resetStudentResultsSheet()}
+function populateResultStudents(){const select=$('resultSheetStudent'),previous=select.value,id=$('resultSheetClass').value;select.replaceChildren(new Option('Choose student',''));for(const st of [...data.students].filter(x=>x.class_id===id).sort(resultRollSort))select.add(new Option((st.roll_number??st.student_code??'—')+' · '+st.full_name,st.id));if([...select.options].some(o=>o.value===previous))select.value=previous;resetStudentResultsSheet()}
 $('resultSheetClass').addEventListener('change',populateResultStudents);
 $('resultSheetStudent').addEventListener('change',()=>resetStudentResultsSheet());
 for(const id of ['resultSheetMode','resultSheetType','resultSheetFrom','resultSheetTo','resultSheetTerm'])$(id).addEventListener('change',()=>{if(combinedResultInfo){renderSelectedResults();loadStudentReportRemark()}});
