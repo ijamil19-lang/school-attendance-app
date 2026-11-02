@@ -1,0 +1,17 @@
+{
+  "name": "Attendance Register",
+  "short_name": "Register",
+  "start_url": "/attendance.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f3f7fa",
+  "theme_color": "#075363",
+  "icons": [
+    {
+      "src": "/schoolflow-attendance-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
