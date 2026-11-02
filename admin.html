@@ -293,7 +293,7 @@ async function viewTeacher(id){
  const account=document.createElement('section');account.className='profile-detail-group';const accountHeading=document.createElement('h3');accountHeading.textContent='Teacher account & employment actions';account.append(accountHeading);const actions=document.createElement('div');actions.className='actions';actions.style.cssText='display:flex;flex-wrap:wrap;justify-content:flex-start;gap:8px';
  const addAction=(label,fn,disabled=false)=>{const button=document.createElement('button');button.type='button';button.className='secondary';button.textContent=label;button.disabled=disabled;button.onclick=async()=>{await fn();if(!page.classList.contains('hidden'))closeTeacherDetails()};actions.append(button)};
  if(!t.departure_date){
- addAction('Photo & PIN',()=>openTeacherKioskModal(id));
+ addAction('Photo & PIN',()=>openKioskTeacher(id));
  addAction(t.active?'Disable Teacher':'Reactivate Teacher',()=>setTeacherActive(id));
  if(t.user_id){addAction('Change Login Email',()=>changeTeacherEmail(id));addAction('Send Password Reset',()=>sendTeacherReset(id))}
  else if(t.email){addAction('Send Secure Invite',()=>shareTeacherLink(id));addAction('Activate Login',()=>activateTeacher(id))}
