@@ -77,6 +77,64 @@ header{position:sticky;top:0;z-index:20;background:#ffffffed;backdrop-filter:blu
 @media(max-width:900px){.attendance-compare{grid-template-columns:1fr;gap:17px}}
 @media(max-width:650px){.attendance-compare{margin-top:29px}.compare-card-head{padding:20px 18px 0}.compare-columns{gap:9px;padding:16px 13px 15px}.compare-side{padding:9px}.paper-sheet,.digital-screen,.teacher-kiosk{min-height:194px}.compare-takeaway{margin:0 13px 14px;font-size:9px}}
 
+
+/* Refined side-by-side attendance comparison */
+.attendance-title span{color:#07834f}
+.attendance-compare{gap:18px;margin-top:34px}
+.compare-card{border:1px solid #e2e9e6;border-radius:18px;background:#f9fbfa;box-shadow:0 7px 22px #123e3510}
+.compare-card-head{text-align:center;padding:20px 18px 0}
+.compare-card-head h3{display:inline-flex;align-items:center;justify-content:center;margin:0;padding:9px 20px;border-radius:10px;background:#07684e;color:#fff;font-size:14px;letter-spacing:0}
+.compare-card-head p{max-width:420px;margin:9px auto 0;font-size:11px}
+.compare-columns{gap:13px;padding:17px 15px 8px}
+.compare-side{padding:11px;background:#fff;border-color:#e7e8e2}
+.compare-side.digital{background:#fff;border-color:#d9e9df}
+.compare-label{margin-bottom:10px;font-size:9px;letter-spacing:.45px}
+.compare-label:before{width:8px;height:8px}
+.paper-sheet{min-height:218px;padding:15px 11px 12px 18px;border-radius:8px;background:repeating-linear-gradient(to bottom,#fffefa 0,#fffefa 25px,#e9edf0 26px);box-shadow:0 4px 12px #44331b12}
+.paper-heading{font-size:11px}
+.paper-meta{font-size:8px;margin-bottom:11px}
+.paper-table{font-size:9px}
+.paper-table th,.paper-table td{padding:6px 3px}
+.paper-table th{font-size:7px}
+.paper-sign{font-size:11px}
+.digital-screen{min-height:218px;border-radius:9px}
+.digital-top{padding:11px 10px}
+.digital-brand{font-size:10px}
+.digital-date{font-size:8px}
+.digital-body{padding:12px}
+.digital-class{font-size:11px;margin-bottom:9px}
+.digital-stats{gap:5px;margin-bottom:10px}
+.digital-stat{padding:8px 3px}
+.digital-stat strong{font-size:15px}
+.digital-stat span{font-size:7px}
+.digital-list{gap:6px}
+.digital-person{padding:6px 7px;font-size:9px}
+.status-pill{font-size:7px;padding:3px 6px}
+.digital-foot{font-size:8px;margin-top:10px}
+.teacher-kiosk{min-height:218px;padding:14px 11px;border-radius:9px}
+.kiosk-mark{width:31px;height:31px;font-size:14px}
+.kiosk-title{font-size:11px}
+.kiosk-sub{font-size:8px;margin:4px 0 10px}
+.kiosk-pin span{width:19px;height:19px;font-size:9px}
+.kiosk-verified{font-size:7px;padding:5px 8px}
+.kiosk-record{margin-top:10px;padding:8px}
+.kiosk-record strong{font-size:9px}
+.kiosk-times span{font-size:7px}
+.kiosk-times b{font-size:9px}
+.compare-points{display:grid;gap:7px;list-style:none;margin:12px 0 3px;padding:0}
+.compare-points li{position:relative;padding-left:16px;color:#566d6b;font-size:9px;line-height:1.4}
+.compare-points li:before{position:absolute;left:0;top:0;font-size:11px;font-weight:900}
+.compare-side:not(.digital) .compare-points li:before{content:"×";color:#d34d45}
+.compare-side.digital .compare-points li:before{content:"✓";color:#078b4e}
+.compare-takeaway{margin:10px 15px 16px;padding:10px 12px;font-size:9px;background:#edf5f1}
+@media(max-width:650px){
+ .compare-columns{grid-template-columns:1fr;gap:12px;padding:15px 13px 8px}
+ .paper-sheet,.digital-screen,.teacher-kiosk{min-height:220px}
+ .compare-points{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:10px}
+ .compare-points li{font-size:9px}
+ .compare-takeaway{margin:10px 13px 14px}
+}
+
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:42px}.step{padding:28px;border:1px solid #e0ebe7;border-radius:17px;background:#fff}.step-no{display:inline-flex;align-items:center;justify-content:center;width:37px;height:37px;border-radius:11px;background:#e1f4eb;color:#08796e;font-size:13px;font-weight:900}.step h3{margin:17px 0 8px;color:#23474e;font-size:17px}.step p{margin:0;color:#708588;font-size:13px;line-height:1.75}
 .cta-wrap{padding:76px 0;background:#fff}.cta{position:relative;overflow:hidden;padding:60px 30px;border-radius:23px;text-align:center;color:#fff;background:linear-gradient(115deg,#073c49,#08716f)}.cta:after{content:"";position:absolute;width:330px;height:330px;right:-130px;top:-210px;border:1px solid #ffffff30;border-radius:50%;box-shadow:0 0 0 55px #ffffff0c,0 0 0 110px #ffffff08}.cta .eyebrow{color:#b8eee0;justify-content:center}.cta .eyebrow:before{background:#8ce5c4}.cta h2{position:relative;z-index:1;max-width:700px;margin:14px auto;color:#fff}.cta p{position:relative;z-index:1;max-width:590px;margin:0 auto 25px;color:#c7e5e1;font-size:15px;line-height:1.7}.cta .button{position:relative;z-index:1;background:#fff;color:#075b66;box-shadow:none}.cta .button:hover{background:#e7f7f0}
 footer{padding:28px 0;background:#f7faf9;border-top:1px solid #e3ece9;color:#75898b;font-size:12px}.footer-row{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}.footer-brand{color:#31565d;font-weight:800;font-size:14px}.footer-links{display:flex;gap:20px}.footer-links a:hover{color:var(--teal)}
@@ -102,7 +160,7 @@ footer{padding:28px 0;background:#f7faf9;border-top:1px solid #e3ece9;color:#758
 <div class="benefit"><span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h17"/><path d="m7 15 4-4 3 2 6-7"/></svg></span><div><b>Useful reports</b><small>Review school performance</small></div></div>
 </div></section>
 <section class="section soft" id="attendance"><div class="container">
-<div class="section-head"><span class="eyebrow">From paper to digital</span><h2>See the difference in everyday attendance</h2><p class="section-lead">Compare the traditional paper register with SchoolFlow's digital attendance process — for students and teachers. The sample screens below are illustrative previews, not live school records.</p></div>
+<div class="section-head"><span class="eyebrow">From paper to digital</span><h2 class="attendance-title">Traditional Register vs <span>SchoolFlow Digital System</span></h2><p class="section-lead">A visual comparison of the old paper-based method and a faster, clearer digital process for student and teacher attendance. Sample names and figures are illustrative.</p></div>
 <div class="attendance-compare">
 <article class="compare-card">
 <div class="compare-card-head"><h3>Student Attendance</h3><p>From calling names and marking a paper register to class-wise digital attendance.</p></div>
@@ -115,6 +173,7 @@ footer{padding:28px 0;background:#f7faf9;border-top:1px solid #e3ece9;color:#758
 <tr><td>01</td><td>Ali Raza</td><td class="paper-mark">P</td></tr><tr><td>02</td><td>Ayesha Noor</td><td class="paper-mark">P</td></tr><tr><td>03</td><td>Hamza Khan</td><td class="paper-mark absent">A</td></tr><tr><td>04</td><td>Sara Ahmed</td><td class="paper-mark">P</td></tr><tr><td>05</td><td>Bilal Iqbal</td><td class="paper-mark">P</td></tr>
 </tbody></table>
 </div>
+<ul class="compare-points"><li>Manual marking takes time</li><li>Pages can be lost or damaged</li><li>Hard to find past attendance</li><li>Totals need manual counting</li></ul>
 </div>
 <div class="compare-side digital">
 <div class="compare-label">SchoolFlow digital</div>
@@ -125,6 +184,7 @@ footer{padding:28px 0;background:#f7faf9;border-top:1px solid #e3ece9;color:#758
 <div class="digital-list"><div class="digital-person"><span>Ali Raza</span><span class="status-pill">Present</span></div><div class="digital-person"><span>Ayesha Noor</span><span class="status-pill">Present</span></div><div class="digital-person"><span>Hamza Khan</span><span class="status-pill off">Absent</span></div></div>
 <div class="digital-foot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg>Saved class record · Ready for reports</div>
 </div></div>
+<ul class="compare-points"><li>Mark attendance by class</li><li>Present and absent totals</li><li>Search attendance history</li><li>Reports ready when needed</li></ul>
 </div>
 </div>
 <p class="compare-takeaway"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg>Attendance is stored by class and date, making it easier to review absences and attendance history without searching through paper pages.</p>
@@ -140,6 +200,7 @@ footer{padding:28px 0;background:#f7faf9;border-top:1px solid #e3ece9;color:#758
 <tr><td>Mr Imran</td><td>7:42</td><td>2:10</td><td class="paper-sign">I.</td></tr><tr><td>Ms Ayesha</td><td>7:51</td><td>2:05</td><td class="paper-sign">A.</td></tr><tr><td>Mr Ahmed</td><td>8:03</td><td>—</td><td class="paper-sign">A.</td></tr><tr><td>Ms Sana</td><td>7:48</td><td>2:00</td><td class="paper-sign">S.</td></tr>
 </tbody></table>
 </div>
+<ul class="compare-points"><li>Staff sign manually</li><li>Times can be incomplete</li><li>No automatic working hours</li><li>Hard to verify attendance</li></ul>
 </div>
 <div class="compare-side digital">
 <div class="compare-label">SchoolFlow digital</div>
@@ -149,9 +210,10 @@ footer{padding:28px 0;background:#f7faf9;border-top:1px solid #e3ece9;color:#758
 <div class="kiosk-verified"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg>School location verified</div>
 <div class="kiosk-record"><strong>Mr Imran · Attendance recorded</strong><div class="kiosk-times"><span>Check-in<b>07:42 AM</b></span><span>Check-out<b>02:10 PM</b></span><span>Total time<b>6h 28m</b></span></div></div>
 </div>
+<ul class="compare-points"><li>Secure PIN check-in</li><li>GPS school-boundary check</li><li>Sign-in photo verification</li><li>Working hours calculated</li></ul>
 </div>
 </div>
-<p class="compare-takeaway"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg>Teachers use the school kiosk with a PIN. Check-in and check-out times are recorded together, with a school-boundary check and total time calculated.</p>
+<p class="compare-takeaway"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg>Teacher check-in and check-out are recorded together, with school-boundary verification and total working time calculated automatically.</p>
 </article>
 </div>
 </div></section>
