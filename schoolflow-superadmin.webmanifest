@@ -1,0 +1,17 @@
+{
+  "name": "SchoolFlow Super Admin",
+  "short_name": "SF Super Admin",
+  "start_url": "/platform.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f2f7fa",
+  "theme_color": "#075363",
+  "icons": [
+    {
+      "src": "/schoolflow-superadmin-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
