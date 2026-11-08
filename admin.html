@@ -334,15 +334,13 @@ async function setTeacherActive(id){
 async function shareTeacherLink(id){
  const t=data.teachers.find(x=>x.id===id);
  if(!t?.email){notify('Add the teacher email first.',true);return}
- if(t.user_id){notify('Teacher already has a login. Use password reset instead.',true);return}
- if(!window.confirm('Send a secure one-time password-setting invitation to '+t.email+'?'))return;
- notify('Preparing secure teacher invitation…');
+ if(!window.confirm('Email the permanent Teacher Attendance Register link to '+t.email+'? If this teacher has not activated their account yet, the email will also include the secure setup link.'))return;
+ notify('Preparing teacher attendance link email…');
  try{
   const {data:result,error}=await client.functions.invoke('schoolflow-create-teacher-login',{body:{teacher_id:id}});
   if(error){let message=error.message;try{const details=await error.context?.json();if(details?.message)message=details.message}catch(e){}throw Error(message)}
-  if(result?.existing_account){notify('Existing SchoolFlow account linked. The teacher can sign in with the same email and password.');await refresh();return}
-  if(!result?.email_sent)throw Error(result?.message||'Invitation email was not accepted');
-  notify('Secure invitation email accepted for '+t.email+'. The teacher will choose their own password.');
+  if(!result?.email_sent)throw Error(result?.message||'Teacher email was not accepted');
+  notify(result?.existing_account?'Attendance register link emailed to '+t.email+'. The teacher can bookmark it and use their existing login.':'Invitation and attendance register link emailed to '+t.email+'. The teacher can activate the account, then bookmark the register link.');
   await refresh();
  }catch(e){notify('Could not send secure invitation: '+e.message,true)}
 }
