@@ -340,6 +340,7 @@ async function shareTeacherLink(id){
  try{
   const {data:result,error}=await client.functions.invoke('schoolflow-create-teacher-login',{body:{teacher_id:id}});
   if(error){let message=error.message;try{const details=await error.context?.json();if(details?.message)message=details.message}catch(e){}throw Error(message)}
+  if(result?.existing_account){notify('Existing SchoolFlow account linked. The teacher can sign in with the same email and password.');await refresh();return}
   if(!result?.email_sent)throw Error(result?.message||'Invitation email was not accepted');
   notify('Secure invitation email accepted for '+t.email+'. The teacher will choose their own password.');
   await refresh();
