@@ -951,7 +951,12 @@ async function schoolAssistantRun(){
    if(!classMatch){schoolAssistantSay('مجھے کلاس کا نام واضح نہیں ملا۔ براہِ کرم کلاس کا نام دوبارہ بتائیں، مثلاً Class 5۔');status.textContent='Class not identified';return}
    $('reportStart').value=schoolAssistantToday();$('reportEnd').value=schoolAssistantToday();$('reportClass').value=classMatch.id;$('reportStudent').value='';
    await runAttendanceReport();
-   if(!reportRows.length&&$('reportStatus').textContent.startsWith('Report failed'))throw Error($('reportStatus').textContent);
+   if($('reportStatus').textContent.startsWith('Report failed'))throw Error($('reportStatus').textContent);
+   if(!reportRows.length){
+    schoolAssistantSay('آج '+classMatch.name+' کے لیے کوئی حاضری ریکارڈ نہیں ملا۔ اس لیے غیر حاضری کی تعداد کی تصدیق نہیں ہو سکی۔');
+    status.textContent='No attendance records found; no absence count has been assumed.';
+    return;
+   }
    const absent=reportRows.filter(r=>r.status==='absent').length;
    const recorded=reportRows.length;
    schoolAssistantLastAction={type:'attendance',className:classMatch.name,date:schoolAssistantToday()};
