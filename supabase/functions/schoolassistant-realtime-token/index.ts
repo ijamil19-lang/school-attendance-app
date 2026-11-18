@@ -1,33 +1,37 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "https://schoolflow.skylightbusiness.com",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Vary": "Origin",
-};
+const allowedOrigins = new Set([
+  "https://schoolflow.skylightbusiness.com",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "http://localhost:5500",
+  "http://127.0.0.1:5500",
+]);
+
+function corsHeaders(origin: string) {
+  return {
+    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Vary": "Origin",
+  };
+}
 
 function json(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json" },
   });
 }
 
 Deno.serve(async (req: Request) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
-  if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
+  const origin = req.headers.get("Origin") ?? "";
+  if (!allowedOrigins.has(origin)) return new Response("Origin not allowed", { status: 403 });
+  const cors = corsHeaders(origin);
+  if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
+  if (req.method !== "POST") return new Response(JSON.stringify({ error: "Method not allowed" }), { status: 405, headers: { ...cors, "Content-Type": "application/json" } });
 
   try {
-    const origin = req.headers.get("Origin") ?? "";
-    const allowedOrigins = new Set([
-      "https://schoolflow.skylightbusiness.com",
-      "http://localhost:5173",
-      "http://127.0.0.1:5173",
-      "http://localhost:5500",
-      "http://127.0.0.1:5500",
-    ]);
-    if (!allowedOrigins.has(origin)) return json({ error: "Origin not allowed" }, 403);
 
     const authHeader = req.headers.get("Authorization") ?? "";
     const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
