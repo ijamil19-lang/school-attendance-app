@@ -20,7 +20,7 @@ function corsHeaders(origin: string) {
 function json(data: unknown, status = 200, cors: Record<string, string> = {}) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { ...cors, "Content-Type": "application/json" },
+    headers: { ...cors, "Content-Type": "application/json", "Cache-Control": "no-store" },
   });
 }
 
@@ -38,7 +38,20 @@ Deno.serve(async (req: Request) => {
     if (!token) return json({ error: "Please sign in again." }, 401, cors);
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
+    // Supabase currently exposes a publishable-key name map in Edge Functions.
+    // Keep compatibility with projects that still expose the legacy anon key.
+    let supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+    if (!supabaseAnonKey) {
+      try {
+        const publishableKeyNames = JSON.parse(Deno.env.get("SUPABASE_PUBLISHABLE_KEYS") ?? "{}");
+        const defaultKeyEnvName = publishableKeyNames.default;
+        if (typeof defaultKeyEnvName === "string") {
+          supabaseAnonKey = Deno.env.get(defaultKeyEnvName) ?? "";
+        }
+      } catch {
+        console.error("Supabase publishable-key configuration could not be read.");
+      }
+    }
     const openAiKey = Deno.env.get("OPENAI_API_KEY");
     if (!supabaseUrl || !supabaseAnonKey || !openAiKey) {
       console.error("Required server configuration is missing.");
@@ -88,6 +101,9 @@ Deno.serve(async (req: Request) => {
             "Do not ask the user to share student personal data in this voice test.",
           ].join(" "),
           audio: {
+            input: {
+              transcription: { model: "gpt-4o-mini-transcribe" },
+            },
             output: { voice: "marin" },
           },
         },
