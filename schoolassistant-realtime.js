@@ -44,8 +44,12 @@
   }
 
   function handleRealtimeEvent(event) {
-    if (event.type === "response.audio_transcript.done" && event.transcript) {
-      showAnswer(event.transcript);
+    if ((event.type === "response.output_audio_transcript.delta" || event.type === "response.audio_transcript.delta") && event.delta) {
+      responseText += event.delta;
+      showAnswer(responseText);
+    } else if ((event.type === "response.output_audio_transcript.done" || event.type === "response.audio_transcript.done") && event.transcript) {
+      responseText = event.transcript;
+      showAnswer(responseText);
     } else if (event.type === "response.output_text.delta" && event.delta) {
       responseText += event.delta;
       showAnswer(responseText);
@@ -108,9 +112,30 @@
 
       const offer = await peer.createOffer();
       await peer.setLocalDescription(offer);
+
+      // Wait for ICE gathering so the SDP sent to OpenAI includes browser candidates.
+      if (peer.iceGatheringState !== "complete") {
+        await new Promise((resolve, reject) => {
+          const timeout = setTimeout(() => {
+            peer.removeEventListener("icegatheringstatechange", onIceGatheringStateChange);
+            reject(new Error("Timed out preparing the secure voice connection. Please try again."));
+          }, 10000);
+          function onIceGatheringStateChange() {
+            if (peer.iceGatheringState !== "complete") return;
+            clearTimeout(timeout);
+            peer.removeEventListener("icegatheringstatechange", onIceGatheringStateChange);
+            resolve();
+          }
+          peer.addEventListener("icegatheringstatechange", onIceGatheringStateChange);
+          onIceGatheringStateChange();
+        });
+      }
+
+      const completeOfferSdp = peer.localDescription?.sdp;
+      if (!completeOfferSdp) throw new Error("Could not prepare the voice connection. Please try again.");
       const sdpResponse = await fetch("https://api.openai.com/v1/realtime/calls", {
         method: "POST",
-        body: offer.sdp,
+        body: completeOfferSdp,
         headers: {
           "Authorization": "Bearer " + tokenBody.client_secret,
           "Content-Type": "application/sdp",
@@ -118,7 +143,7 @@
       });
       if (!sdpResponse.ok) {
         const detail = await sdpResponse.text();
-        throw new Error("OpenAI connection failed (" + sdpResponse.status + "). " + detail.slice(0, 180));
+        throw new Error("OpenAI connection failed (" + sdpResponse.status + "). " + detail.slice(0, 220));
       }
       await peer.setRemoteDescription({ type: "answer", sdp: await sdpResponse.text() });
       connecting = false;
