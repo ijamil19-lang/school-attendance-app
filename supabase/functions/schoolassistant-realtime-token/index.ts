@@ -48,7 +48,7 @@ Deno.serve(async (req: Request) => {
     const supabase = createClient(supabaseUrl, supabaseAnonKey, {
       global: { headers: { Authorization: authHeader } },
       auth: { persistSession: false, autoRefreshToken: false },
-    }, 200, cors);
+    });
     const { data: userData, error: userError } = await supabase.auth.getUser(token);
     if (userError || !userData.user) return json({ error: "Your session is invalid. Please sign in again." }, 401, cors);
 
@@ -92,7 +92,7 @@ Deno.serve(async (req: Request) => {
           },
         },
       }),
-    }, 200, cors);
+    });
 
     const openAiBody = await openAiResponse.json().catch(() => ({}));
     if (!openAiResponse.ok) {
@@ -111,4 +111,4 @@ Deno.serve(async (req: Request) => {
     console.error("SchoolAssistant token error:", error instanceof Error ? error.message : "Unknown error");
     return json({ error: "Unable to start SchoolAssistant. Please try again." }, 500, cors);
   }
-}, 200, cors);
+});
