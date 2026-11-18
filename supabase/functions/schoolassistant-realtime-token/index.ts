@@ -17,10 +17,10 @@ function corsHeaders(origin: string) {
   };
 }
 
-function json(data: unknown, status = 200) {
+function json(data: unknown, status = 200, cors: Record<string, string> = {}) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { "Content-Type": "application/json" },
+    headers: { ...cors, "Content-Type": "application/json" },
   });
 }
 
@@ -35,22 +35,22 @@ Deno.serve(async (req: Request) => {
 
     const authHeader = req.headers.get("Authorization") ?? "";
     const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
-    if (!token) return json({ error: "Please sign in again." }, 401);
+    if (!token) return json({ error: "Please sign in again." }, 401, cors);
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
     const openAiKey = Deno.env.get("OPENAI_API_KEY");
     if (!supabaseUrl || !supabaseAnonKey || !openAiKey) {
       console.error("Required server configuration is missing.");
-      return json({ error: "SchoolAssistant is not configured yet." }, 500);
+      return json({ error: "SchoolAssistant is not configured yet." }, 500, cors);
     }
 
     const supabase = createClient(supabaseUrl, supabaseAnonKey, {
       global: { headers: { Authorization: authHeader } },
       auth: { persistSession: false, autoRefreshToken: false },
-    });
+    }, 200, cors);
     const { data: userData, error: userError } = await supabase.auth.getUser(token);
-    if (userError || !userData.user) return json({ error: "Your session is invalid. Please sign in again." }, 401);
+    if (userError || !userData.user) return json({ error: "Your session is invalid. Please sign in again." }, 401, cors);
 
     // Require an administrator membership. School identity is resolved on the server;
     // never accept a browser-supplied school_id.
@@ -63,10 +63,10 @@ Deno.serve(async (req: Request) => {
 
     if (membershipError) {
       console.error("School membership lookup failed:", membershipError.message);
-      return json({ error: "Could not verify your school administrator access." }, 403);
+      return json({ error: "Could not verify your school administrator access." }, 403, cors);
     }
-    if (!memberships?.length) return json({ error: "School administrator access is required." }, 403);
-    if (memberships.length > 1) return json({ error: "This account is linked to more than one school. Please contact support before using voice assistance." }, 403);
+    if (!memberships?.length) return json({ error: "School administrator access is required." }, 403, cors);
+    if (memberships.length > 1) return json({ error: "This account is linked to more than one school. Please contact support before using voice assistance." }, 403, cors);
 
     const openAiResponse = await fetch("https://api.openai.com/v1/realtime/client_secrets", {
       method: "POST",
@@ -92,23 +92,23 @@ Deno.serve(async (req: Request) => {
           },
         },
       }),
-    });
+    }, 200, cors);
 
     const openAiBody = await openAiResponse.json().catch(() => ({}));
     if (!openAiResponse.ok) {
       console.error("OpenAI Realtime client secret request failed:", openAiResponse.status, openAiBody?.error?.message ?? "Unknown error");
-      return json({ error: "Could not start the voice service. Please try again shortly." }, 502);
+      return json({ error: "Could not start the voice service. Please try again shortly." }, 502, cors);
     }
 
     const value = openAiBody?.value ?? openAiBody?.client_secret?.value;
     if (!value) {
       console.error("OpenAI Realtime response did not contain a client secret.");
-      return json({ error: "Voice service returned an unexpected response." }, 502);
+      return json({ error: "Voice service returned an unexpected response." }, 502, cors);
     }
 
-    return json({ client_secret: value, expires_at: openAiBody?.expires_at ?? openAiBody?.client_secret?.expires_at ?? null });
+    return json({ client_secret: value, expires_at: openAiBody?.expires_at ?? openAiBody?.client_secret?.expires_at ?? null }, 200, cors);
   } catch (error) {
     console.error("SchoolAssistant token error:", error instanceof Error ? error.message : "Unknown error");
-    return json({ error: "Unable to start SchoolAssistant. Please try again." }, 500);
+    return json({ error: "Unable to start SchoolAssistant. Please try again." }, 500, cors);
   }
-});
+}, 200, cors);
