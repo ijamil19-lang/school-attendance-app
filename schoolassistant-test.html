@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SchoolAssistant · Safe Local Test</title>
+<style>
+:root{font-family:system-ui,Arial,sans-serif;color:#183341;background:#f2f7f8}*{box-sizing:border-box}body{margin:0}header{background:#075363;color:#fff;padding:22px max(20px,calc((100% - 900px)/2))}main{max-width:900px;margin:28px auto;padding:0 18px}.card{background:#fff;border-radius:16px;padding:22px;margin:16px 0;box-shadow:0 3px 16px #1234}h1{font-size:22px;margin:0}h2{font-size:19px;margin:0 0 12px}p{line-height:1.55}.notice{background:#fff4d8;border-left:4px solid #d99b19;padding:12px 14px;border-radius:8px}.row{display:flex;gap:10px;flex-wrap:wrap}button{border:0;border-radius:9px;padding:11px 16px;background:#087486;color:white;font-weight:600;cursor:pointer}button.secondary{background:#e5eff1;color:#16414b}button:disabled{opacity:.5;cursor:not-allowed}textarea{width:100%;min-height:95px;padding:12px;border:1px solid #b9cbd0;border-radius:9px;font:inherit}#answer{background:#edf7f7;padding:16px;border-radius:10px;white-space:pre-wrap;line-height:1.7}.muted{color:#58717a;font-size:14px}table{border-collapse:collapse;width:100%;margin-top:12px}th,td{text-align:left;padding:9px;border-bottom:1px solid #dce7e9}#status{min-height:22px;color:#526a73}.pill{display:inline-block;background:#e2f0f1;padding:4px 9px;border-radius:20px;font-size:12px;font-weight:700}
+</style>
+</head>
+<body>
+<header><h1>SchoolFlow · SchoolAssistant</h1><div>Local demo · Fictional data only</div></header>
+<main>
+<section class="card">
+<div class="notice"><strong>SAFE TEST MODE:</strong> This page uses fictional students and attendance stored only in this page. It does not connect to Supabase, SchoolFlow, or any live school account.</div>
+<h2 style="margin-top:20px">Ask SchoolAssistant</h2>
+<p>Type in Urdu, Roman Urdu or English, or try voice input in Chrome.</p>
+<textarea id="question" placeholder="Example: Aaj class 5 mein kitne students absent hain?"></textarea>
+<div class="row" style="margin-top:10px"><button id="ask">Ask assistant</button><button id="mic" class="secondary">🎙 Speak Urdu</button><button id="stop" class="secondary" disabled>Stop listening</button><button id="print" class="secondary" disabled>Print / save report</button></div>
+<p id="status" aria-live="polite">Ready. Try one of the sample questions below.</p>
+<div id="answer" aria-live="polite">السلام علیکم! میں اسکول اسسٹنٹ ہوں۔ آپ حاضری کے بارے میں سوال پوچھ سکتے ہیں۔</div>
+</section>
+<section class="card">
+<h2>Try these questions</h2>
+<ul>
+<li>Aaj class 5 mein kitne students absent hain?</li>
+<li>Class 6 mein kitne students absent hain?</li>
+<li>Attendance report for Ali Ahmed</li>
+<li>Hassan Raza ki monthly attendance report</li>
+<li>Class 7 absent students today</li>
+</ul>
+<p class="muted">Voice recognition and Urdu speech playback depend on your browser and available language voices. If voice does not work, typing still tests the assistant logic.</p>
+</section>
+<section class="card">
+<h2>Fictional test records <span class="pill">DEMO DATA</span></h2>
+<p class="muted">These sample records are deliberately invented and are not copied from any SchoolFlow account.</p>
+<div id="dataPreview"></div>
+</section>
+</main>
+<script>
+const classes=[{id:'c5',name:'Class 5'},{id:'c6',name:'Class 6'},{id:'c7',name:'Class 7'}];
+const students=[
+{id:'s1',name:'Ali Ahmed',code:'TST-001',classId:'c5'},
+{id:'s2',name:'Sara Khan',code:'TST-002',classId:'c5'},
+{id:'s3',name:'Hassan Raza',code:'TST-003',classId:'c6'},
+{id:'s4',name:'Ayesha Noor',code:'TST-004',classId:'c6'},
+{id:'s5',name:'Bilal Shah',code:'TST-005',classId:'c7'}
+];
+const today=new Date().toISOString().slice(0,10);
+const attendance=[
+{studentId:'s1',date:today,status:'present'},{studentId:'s2',date:today,status:'absent'},
+{studentId:'s3',date:today,status:'late'},{studentId:'s4',date:today,status:'absent'},
+{studentId:'s5',date:today,status:'present'}
+];
+const history=[
+...['present','present','absent','present','late','present','present','present','absent','present','present','present'].map((status,i)=>({studentId:'s1',date:new Date(new Date().getFullYear(),new Date().getMonth(),i+1).toISOString().slice(0,10),status})),
+...['present','absent','present','present','present','late','present'].map((status,i)=>({studentId:'s3',date:new Date(new Date().getFullYear(),new Date().getMonth(),i+1).toISOString().slice(0,10),status}))
+];
+let lastReport=null,recognition=null;
+const $=id=>document.getElementById(id);
+function norm(s){return String(s||'').toLocaleLowerCase().replace(/[؟?!،,.]/g,' ').replace(/\s+/g,' ').trim()}
+function speak(text){$('answer').textContent=text;if('speechSynthesis'in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='ur-PK';const v=speechSynthesis.getVoices().find(x=>/^ur(-|$)/i.test(x.lang));if(v)u.voice=v;speechSynthesis.speak(u)}}
+function renderData(){$('dataPreview').innerHTML='<table><thead><tr><th>Student</th><th>Class</th><th>Today</th></tr></thead><tbody>'+students.map(s=>{const c=classes.find(x=>x.id===s.classId);const a=attendance.find(x=>x.studentId===s.id&&x.date===today);return '<tr><td>'+s.name+' ('+s.code+')</td><td>'+c.name+'</td><td>'+((a&&a.status)||'No record')+'</td></tr>'}).join('')+'</tbody></table>'}
+function makeStudentReport(s){const rows=history.filter(x=>x.studentId===s.id);const counts={present:rows.filter(x=>x.status==='present').length,absent:rows.filter(x=>x.status==='absent').length,late:rows.filter(x=>x.status==='late').length};lastReport={title:s.name+' monthly attendance',rows,counts,student:s};speak(s.name+' کی ماہانہ حاضری رپورٹ تیار ہے۔ حاضر: '+counts.present+'، غیر حاضر: '+counts.absent+'، تاخیر: '+counts.late+'۔');$('status').textContent='Fictional monthly report ready.';$('print').disabled=false}
+function run(){const raw=$('question').value.trim(),cmd=norm(raw);lastReport=null;$('print').disabled=true;if(!cmd){speak('براہِ کرم اپنا سوال لکھیں یا بولیں۔');return}
+const cls=[...classes].sort((a,b)=>b.name.length-a.name.length).find(c=>cmd.includes(norm(c.name)));
+const asksAbsent=/(absent|absence|ghair hazir|ghairhazir|غیر حاضر|غیرحاضر|غائب|absentees)/i.test(raw);
+const asksClass=/(class|grade|jamaat|جماعت|کلاس)/i.test(raw);
+if(asksAbsent&&asksClass){if(!cls){speak('براہِ کرم کلاس کا نام واضح بتائیں، مثلاً Class 5۔');$('status').textContent='Class not identified.';return}
+const records=attendance.filter(a=>a.date===today&&students.some(s=>s.id===a.studentId&&s.classId===cls.id));
+if(!records.length){speak('آج '+cls.name+' کے لیے کوئی حاضری ریکارڈ موجود نہیں۔ غیر حاضری کی تعداد معلوم نہیں ہو سکی۔');$('status').textContent='No records: zero absences have not been assumed.';return}
+const absent=records.filter(a=>a.status==='absent').length;lastReport={title:cls.name+' attendance',rows:records.map(a=>({student:students.find(s=>s.id===a.studentId).name,status:a.status})),counts:{recorded:records.length,absent}};speak('آج '+cls.name+' میں '+absent+' طلبہ غیر حاضر ریکارڈ ہوئے ہیں۔ کل '+records.length+' حاضری ریکارڈز ملے۔');$('status').textContent='Fictional class attendance report ready.';$('print').disabled=false;return}
+const student=students.find(s=>cmd.includes(norm(s.name))||cmd.includes(norm(s.code)));
+if(student&&/(student|talib|taliba|report|attendance|رپورٹ|طالب علم|طالبہ)/i.test(raw)){makeStudentReport(student);return}
+speak('فی الحال میں کلاس کی غیر حاضری اور طالب علم کی ماہانہ حاضری رپورٹ بنا سکتا ہوں۔ مثال: Aaj class 5 mein kitne students absent hain?');$('status').textContent='Command not recognised.'}
+$('ask').addEventListener('click',run);$('question').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey))run()});
+$('mic').addEventListener('click',()=>{const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){$('status').textContent='Speech recognition is unavailable here. Please type a question.';return}recognition=new SR();recognition.lang='ur-PK';recognition.interimResults=false;recognition.maxAlternatives=1;recognition.onresult=e=>{$('question').value=e.results[0][0].transcript;run()};recognition.onerror=e=>$('status').textContent='Voice error: '+e.error+'. You can type instead.';recognition.onend=()=>{$('stop').disabled=true};$('stop').disabled=false;$('status').textContent='سن رہا ہوں… بولنا شروع کریں۔';recognition.start()});
+$('stop').addEventListener('click',()=>recognition&&recognition.stop());
+$('print').addEventListener('click',()=>{if(!lastReport)return;const w=window.open('','_blank');if(!w){$('status').textContent='Allow pop-ups to print the report.';return}const title=lastReport.title;const body=lastReport.student?'<p>Present: '+lastReport.counts.present+' · Absent: '+lastReport.counts.absent+' · Late: '+lastReport.counts.late+'</p><table><tr><th>Date</th><th>Status</th></tr>'+lastReport.rows.map(r=>'<tr><td>'+r.date+'</td><td>'+r.status+'</td></tr>').join('')+'</table>':'<p>Recorded: '+lastReport.counts.recorded+' · Absent: '+lastReport.counts.absent+'</p><table><tr><th>Student</th><th>Status</th></tr>'+lastReport.rows.map(r=>'<tr><td>'+r.student+'</td><td>'+r.status+'</td></tr>').join('')+'</table>';w.document.write('<!doctype html><title>'+title+'</title><h1>SchoolFlow · Demo Report</h1><h2>'+title+'</h2>'+body);w.document.close();w.focus();w.print()});
+renderData();
+</script>
+</body></html>
